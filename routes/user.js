@@ -5,8 +5,8 @@ const router = express.Router();
 let Users = require('../models/users');
 
 // Register Form
-router.get('/register', function(req, res){
-	res.render('../../sign-up-page.html');
+router.get('user/register', function(req, res){
+	res.render('register');
 });
 
-//module.exports = router;
+module.exports = router;
