@@ -1,0 +1,20 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "The backend of ANON",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "*",
+    "ejs": "^2.6.1",
+    "express": "*",
+    "mongoose": "*",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
