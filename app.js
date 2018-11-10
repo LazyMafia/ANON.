@@ -39,8 +39,8 @@ app.get('/comments', function(req, res){
 	})
 });
 
-let user = require('./routes/user');
-app.use('/user', user);
+//let user = require('./routes/user');
+//app.use('/user', user);
 
 app.listen(3000);
 console.log("Running on port 3000");
