@@ -11,8 +11,10 @@
     <title>Sign In - ANON.</title>
 </head>
 <body>
-  <%- messages('message', locals) %>
     <div class="loginbox">
+      <div id="registerMessage">
+        <%- messages('message', locals) %>
+      </div>
        <h1 id = "LoginHeader">Login Here</h1>
        <form action="">
            <p class="LoginText">Username</p>
@@ -22,7 +24,7 @@
            <input type="text" name="" placeholder="Enter Password">
 
            <input type="submit" name="" value="Login">
-           <a href="register">Dont have an account?</a>
+           <a href="register">Don't have an account?</a>
        </form> 
     </div>
 

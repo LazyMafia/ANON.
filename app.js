@@ -79,13 +79,13 @@ app.post('/registerUser', function(req, res){
 	req.checkBody('username', 'Username is required.').notEmpty();
 	req.checkBody('password', 'Password is required.').notEmpty();
 	req.checkBody('password2', 'Passwords do not match.').equals(req.body.password);
+	req.checkBody('password', 'Password is too short.').isLength({ min:6 });
 
 	let errors = req.validationErrors();
 
 	if(errors){
-		res.render('register', {
-			errors:errors
-		});
+		req.flash('error', errors[0].msg);
+		res.render('register');
 	} else {
 		let newUser = new Users({
 			username:username,

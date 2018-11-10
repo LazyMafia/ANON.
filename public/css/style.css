@@ -766,7 +766,7 @@ Sidebar
   position: absolute;
   transform: translate(-50%, -50%);
   box-sizing: border-box;
-  padding: 70px 30px;
+  padding: 0 30px 70px 30px;
 }
 
 .loginbox > #LoginHeader {
@@ -829,7 +829,7 @@ Sidebar
   position: absolute;
   transform: translate(-50%, -50%);
   box-sizing: border-box;
-  padding: 70px 30px;
+  padding: 0 30px 70px;
 }
 
 .signupbox > #SignupHeader {
@@ -881,3 +881,19 @@ Sidebar
   color: #211f27;
 }
 
+/* EJS */
+#registerMessage
+{
+  height: 70px;
+  text-align: center;
+  line-height: 60px;
+  padding-top: 10px;
+}
+
+#registerError
+{
+  height: 70px;
+  text-align: center;
+  line-height: 60px;
+  padding-top: 10px;
+}
