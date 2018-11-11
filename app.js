@@ -6,9 +6,11 @@ const bcrypt = require('bcryptjs');
 const expressValidator = require('express-validator');
 const flash = require('connect-flash');
 const session = require('express-session');
+const passport = require('passport');
+const config = require('./config/database');
 
 // Connect to Mongoose
-mongoose.connect('mongodb://localhost/anondb');
+mongoose.connect(config.database);
 var db = mongoose.connection;
 
 // Init App
@@ -57,6 +59,12 @@ app.use(expressValidator({
 	}
 }));
 
+// Passport Config
+require('./config/passport')(passport);
+// Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Load View Engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -64,59 +72,6 @@ app.set('view engine', 'ejs');
 // Home Route
 app.get('/', function(req, res){
 	res.send('Go to welcome page');
-});
-
-// Register Route
-app.get('/register', function(req, res){
-	res.render("register");
-});
-
-app.post('/registerUser', function(req, res){
-	const username = req.body.username;
-	const password = req.body.password;
-	const password2 = req.body.password2;
-
-	req.checkBody('username', 'Username is required.').notEmpty();
-	req.checkBody('password', 'Password is required.').notEmpty();
-	req.checkBody('password2', 'Passwords do not match.').equals(req.body.password);
-	req.checkBody('password', 'Password is too short.').isLength({ min:6 });
-
-	let errors = req.validationErrors();
-
-	if(errors){
-		req.flash('error', errors[0].msg);
-		res.render('register');
-	} else {
-		let newUser = new Users({
-			username:username,
-			password:password
-		});
-
-		// Encrypt Password
-		bcrypt.genSalt(10, function(err, salt){
-			bcrypt.hash(newUser.password, salt, function(err, hash){
-				if(err){
-					console.log(err);
-				}
-				newUser.password = hash;
-				newUser.save(function(err){
-					if(err){
-						console.log(err);
-						return;
-					} else {
-						req.flash('success','You are now registered.');
-						res.redirect('/login');
-					}
-				});
-			});
-		});
-	}
-
-});
-
-// Login Route
-app.get('/login', function(req, res){
-	res.render('login');
 });
 
 // Comments Route
@@ -131,8 +86,13 @@ app.get('/comments', function(req, res){
 	})
 });
 
-//let user = require('./routes/user');
-//app.use('/user', user);
+// Register Routes
+let register = require('./routes/register');
+app.use('/register', register);
+
+// Login Routes
+let login = require('./routes/login');
+app.use('/login', login);
 
 app.listen(3000);
 console.log("Running on port 3000");

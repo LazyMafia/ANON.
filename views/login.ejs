@@ -16,12 +16,12 @@
         <%- messages('message', locals) %>
       </div>
        <h1 id = "LoginHeader">Login Here</h1>
-       <form action="">
+       <form action="/login" method="POST">
            <p class="LoginText">Username</p>
-           <input type="text" name="" placeholder="Enter Username">
+           <input type="text" name="username" placeholder="Enter Username">
 
            <p class="LoginText">Password</p>
-           <input type="text" name="" placeholder="Enter Password">
+           <input type="password" name="password" placeholder="Enter Password">
 
            <input type="submit" name="" value="Login">
            <a href="register">Don't have an account?</a>
