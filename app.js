@@ -86,6 +86,11 @@ app.get('/comments', function(req, res){
 	})
 });
 
+// Support Route
+app.get('/support', function(req, res){
+	res.render('support');
+});
+
 // Register Routes
 let register = require('./routes/register');
 app.use('/register', register);
