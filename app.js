@@ -99,6 +99,7 @@ app.use('/register', register);
 let login = require('./routes/login');
 app.use('/login', login);
 
+// 404 Route
 app.get('*', function(req, res){
 	res.render('error');
 });
