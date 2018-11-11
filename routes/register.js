@@ -10,7 +10,7 @@ router.get('/', function(req, res){
 	res.render("register");
 });
 
-// Add user to databse
+// Add user to database
 router.post('/', function(req, res){
 	const username = req.body.username;
 	const password = req.body.password;
@@ -23,33 +23,74 @@ router.post('/', function(req, res){
 
 	let errors = req.validationErrors();
 
-	if(errors){
-		req.flash('error', errors[0].msg);
-		res.render('register');
-	} else {
-		let newUser = new Users({
-			username:username,
-			password:password
-		});
+	// Custom Errors
+	if(errors == false){
+		if(username.split(' ').join('') == ""){
+			errors = [{
+				msg: 'Username is required.'
+			}];
+		} else if(password.split(' ').join('') == "") {
+			errors = [{
+				msg: 'Password is required.'
+			}];
+		} else if(/\s/.test(username)){
+			errors = [{
+				msg: 'Username may not contain spaces.'
+			}];
+		} else if(/\s/.test(password)){
+			errors = [{
+				msg: 'Password may not contain spaces.'
+			}];
+		}
 
-		// Encrypt Password
-		bcrypt.genSalt(10, function(err, salt){
-			bcrypt.hash(newUser.password, salt, function(err, hash){
-				if(err){
-					console.log(err);
-				}
-				newUser.password = hash;
-				newUser.save(function(err){
+		// Check if username is taken
+		Users.find({'username': username}, function(err, user) {
+			if(err){
+				console.log(err);
+				return err;
+			} else if(user.length!=0) {
+          		if(user[0].username){
+          			errors = [{
+						msg: 'Username is taken.'
+					}];                    
+             	}	
+            }
+            newUser();  
+		});
+	} else {
+		newUser();
+	}
+
+	// Registration
+	function newUser() {
+		if(errors){
+			req.flash('error', errors[0].msg);
+			res.render('register');
+		} else {
+			let newUser = new Users({
+				username:username,
+				password:password
+			});
+
+			// Encrypt Password
+			bcrypt.genSalt(10, function(err, salt){
+				bcrypt.hash(newUser.password, salt, function(err, hash){
 					if(err){
 						console.log(err);
-						return;
-					} else {
-						req.flash('success','You are now registered.');
-						res.redirect('/login');
 					}
+					newUser.password = hash;
+					newUser.save(function(err){
+						if(err){
+							console.log(err);
+							return;
+						} else {
+							req.flash('success','You are now registered.');
+							res.redirect('/login');
+						}
+					});
 				});
 			});
-		});
+		}
 	}
 
 });
