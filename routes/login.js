@@ -15,9 +15,9 @@ router.post('/', function(req, res, next){
 	// Missing Credentials
 	if(!req.body.username || !req.body.password){
 		if(!req.body.username){
-			req.flash("Missing username.")
+			req.body.username = " ";
 		} else {
-			req.flash("Missing password.")
+			req.body.password = " ";
 		}
 	}
 

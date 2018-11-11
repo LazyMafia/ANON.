@@ -6,6 +6,13 @@ const bcrypt = require('bcryptjs');
 module.exports = function(passport){
 	// Local Strategy
 	passport.use(new LocalStrategy(function(username, password, done){
+		// Missing Credentials
+		if(username.replace(/\s+/g, '') == "" || username == ""){
+			return done(null, false, {message: 'Missing username.'});
+		} else if(password.replace(/\s+/g, '') == "" || password == ""){
+			return done(null, false, {message: 'Missing password.'});
+		}
+
 		// Match Username
 		let query = {username:username};
 		Users.findOne(query, function(err, user){
