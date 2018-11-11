@@ -71,7 +71,7 @@ app.set('view engine', 'ejs');
 
 // Home Route
 app.get('/', function(req, res){
-	res.send('Go to welcome page');
+	res.render('index');
 });
 
 // Comments Route
@@ -93,6 +93,10 @@ app.use('/register', register);
 // Login Routes
 let login = require('./routes/login');
 app.use('/login', login);
+
+app.get('*', function(req, res){
+	res.render('error');
+});
 
 app.listen(3000);
 console.log("Running on port 3000");
