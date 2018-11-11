@@ -12,6 +12,15 @@ router.get('/', function(req, res){
 
 // Login Process
 router.post('/', function(req, res, next){
+	// Missing Credentials
+	if(!req.body.username || !req.body.password){
+		if(!req.body.username){
+			req.flash("Missing username.")
+		} else {
+			req.flash("Missing password.")
+		}
+	}
+
 	passport.authenticate('local', {
 		successRedirect: '/',
 		failureRedirect: '/login',
