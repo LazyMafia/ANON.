@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 // Models
-Users = require('./models/users');
+User = require('./models/user');
 
 // Set Public Folder
 app.use(express.static("public"));
@@ -65,6 +65,11 @@ require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.get('*', function(req, res, next){
+	res.locals.user = req.user || null;
+	next();
+});
+
 // Load View Engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -76,7 +81,7 @@ app.get('/', function(req, res){
 
 // Comments Route
 app.get('/comments', function(req, res){
-	Users.getUserComments(function(err, comments){
+	User.getUserComments(function(err, comments){
 		if(err){
 			throw err;
 		}
@@ -89,6 +94,17 @@ app.get('/comments', function(req, res){
 // Support Route
 app.get('/support', function(req, res){
 	res.render('support');
+});
+
+// Post Route
+let posts = require('./routes/posts');
+app.use('/posts', posts);
+
+// Logout Route
+app.get('/logout', function(req, res){
+	req.logout();
+	req.flash('success', 'You have been logged out.');
+	res.redirect('/login');
 });
 
 // Register Routes

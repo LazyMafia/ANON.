@@ -1,5 +1,5 @@
 const LocalStrategy = require('passport-local').Strategy;
-const Users = require('../models/users');
+const User = require('../models/user');
 const config = require('../config/database');
 const bcrypt = require('bcryptjs');
 
@@ -15,7 +15,7 @@ module.exports = function(passport){
 
 		// Match Username
 		let query = {username:username};
-		Users.findOne(query, function(err, user){
+		User.findOne(query, function(err, user){
 			if(err) throw err;
 			if(!user){
 				return done(null, false, {message: 'Incorrect username.'});
@@ -38,7 +38,7 @@ module.exports = function(passport){
 	});
 
 	passport.deserializeUser(function(id, done) {
-  		Users.findById(id, function(err, user) {
+  		User.findById(id, function(err, user) {
     		done(err, user);
   		});
 	});

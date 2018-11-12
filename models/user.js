@@ -2,13 +2,13 @@ var mongoose = require('mongoose');
 var ObjectId = mongoose.Schema.Types.ObjectId;
 
 // Users Schema
-var usersSchema = mongoose.Schema({
+var userSchema = mongoose.Schema({
 	username:{
 		type: String,
 		required: true
 	},
 	email:{
-		type: String,
+		type: String
 	},
 	password:{
 		type: String,
@@ -194,9 +194,9 @@ var usersSchema = mongoose.Schema({
 	}]
 });
 
-var Users = module.exports = mongoose.model('Users', usersSchema);
+var User = module.exports = mongoose.model('User', userSchema);
 
 // Get user comments
 module.exports.getUserComments = function(callback, limit){
-	Users.find(callback).limit(limit);
+	User.find(callback).limit(limit);
 }

@@ -3,7 +3,7 @@ const passport = require('passport');
 const router = express.Router();
 
 // Bring in User Model
-let Users = require('../models/users');
+let User = require('../models/user');
 
 // Show Login Form
 router.get('/', function(req, res){

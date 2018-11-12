@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const router = express.Router();
 
 // Bring in User Model
-let Users = require('../models/users');
+let User = require('../models/user');
 
 // Show Sign Up Form
 router.get('/', function(req, res){
@@ -44,7 +44,7 @@ router.post('/', function(req, res){
 		}
 
 		// Check if username is taken
-		Users.find({'username': username}, function(err, user) {
+		User.find({'username': username}, function(err, user) {
 			if(err){
 				console.log(err);
 				return err;
@@ -67,7 +67,7 @@ router.post('/', function(req, res){
 			req.flash('error', errors[0].msg);
 			res.render('register');
 		} else {
-			let newUser = new Users({
+			let newUser = new User({
 				username:username,
 				password:password
 			});
