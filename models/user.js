@@ -38,21 +38,21 @@ var userSchema = mongoose.Schema({
 		reports_sent: Number,
 	},
 	reports_sent:[{
-		user_id: ObjectId,
-		item_id: ObjectId,
+		user: String,
+		item: String,
 		reason: String,
 		report_date: Date
 	}],
 	reports_received:[{
-		user_id: ObjectId,
-		item_id: ObjectId,
+		user: String,
+		item: String,
 		reason: String,
 		report_date: Date
 	}],
 	user_comments:[{
 		body: String,
 		comment_date: Date,
-		parent: ObjectId,
+		parent: String,
 		reports: Number,
 		upvotes: Number,
 		downvotes: Number,
@@ -144,7 +144,7 @@ var userSchema = mongoose.Schema({
 	},
 	connected_users:{
 		following:[{
-			user_id: ObjectId,
+			user: String,
 			username: String,
 			profile_image:{
 				data: Buffer,
@@ -152,7 +152,7 @@ var userSchema = mongoose.Schema({
 			}
 		}],
 		followers:[{
-			user_id: ObjectId,
+			user: String,
 			username: String,
 			profile_image:{
 				data: Buffer,
@@ -160,7 +160,7 @@ var userSchema = mongoose.Schema({
 			}
 		}],
 		friends:[{
-			user_id: ObjectId,
+			user: String,
 			username: String,
 			profile_image:{
 				data: Buffer,
@@ -168,7 +168,7 @@ var userSchema = mongoose.Schema({
 			}
 		}],
 		friends_sent:[{
-			user_id: ObjectId,
+			user: String,
 			username: String,
 			profile_image:{
 				data: Buffer,
@@ -176,7 +176,7 @@ var userSchema = mongoose.Schema({
 			}
 		}],
 		friends_received:[{
-			user_id: ObjectId,
+			user: String,
 			username: String,
 			profile_image:{
 				data: Buffer,
