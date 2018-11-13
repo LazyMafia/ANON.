@@ -6,12 +6,12 @@ let User = require('../models/user');
 // Bring in Category Model
 let Category = require('../models/category');
 
-router.get('/add', function(req, res){
+router.get('/add', ensureAuthenticated, function(req, res){
 	res.render('addpost');
 });
 
 // Post Process
-router.post('/add', function(req, res){
+router.post('/add', ensureAuthenticated, function(req, res){
 	Category.findOne({name: req.body.category}, function(err, category){
 		if(!err){
 			if(!category){
@@ -45,5 +45,15 @@ router.post('/add', function(req, res){
 		}
 	})
 });
+
+// Access Control
+function ensureAuthenticated(req, res, next){
+	if(req.isAuthenticated()){
+		return next();
+	} else {
+		req.flash('danger', 'Please login before posting.');
+		res.redirect('/login');
+	}
+}
 
 module.exports = router;

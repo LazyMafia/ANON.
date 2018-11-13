@@ -100,6 +100,10 @@ app.get('/support', function(req, res){
 let posts = require('./routes/posts');
 app.use('/posts', posts);
 
+// Admin Route
+//let admin = require('./routes/admin');
+//app.use('/admin', admin);
+
 // Logout Route
 app.get('/logout', function(req, res){
 	req.logout();
