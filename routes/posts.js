@@ -46,6 +46,15 @@ router.post('/add', ensureAuthenticated, function(req, res){
 	})
 });
 
+// Edit Posts
+router.get('/edit/:id', ensureAuthenticated, function(req, res){
+	User.findById(req.params.id, function(err, post){
+		res.render('editpost', {
+			post:post
+		});
+	});
+});
+
 // Access Control
 function ensureAuthenticated(req, res, next){
 	if(req.isAuthenticated()){
