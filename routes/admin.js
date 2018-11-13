@@ -6,6 +6,13 @@ let User = require('../models/user');
 // Bring in Category Model
 let Category = require('../models/category');
 
-router.get('/admin', function(req, res){
-	//if()
-})
+// Show Admin Panel
+router.get('/', function(req, res){
+	if(req.user.username == "admin"){
+		res.render('admin');
+	} else {
+		res.render('error');
+	}
+});
+
+module.exports = router;
