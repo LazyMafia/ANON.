@@ -897,3 +897,68 @@ Sidebar
   line-height: 60px;
   padding-top: 10px;
 }
+
+/*post page content*/
+#content {
+	width: 917px; margin: -240px auto 0 auto; padding: 280px 11% 22px;
+  background: url() repeat-y;
+  text-align: center;
+}	
+
+	#content #main {
+		width: 684px; float: left; 
+	}	
+		#content #main .post {
+      text-align: center;
+			position: relative; margin: 0 0 60px 0; padding: 0 0 66px 0; overflow: hidden;
+			background: url() bottom repeat-x;
+		}
+			#content #main .post h2 {
+				float: left; margin: 0 0 10px 75px;
+				font: 24px Lucida Grande, Lucida Sans Unicode, Helvetica, Sans-Serif; letter-spacing: normal;
+			}
+			#content #main .post p.date {
+				position: absolute; left: 0; top: 0; padding: 4px 7px 4px 7px; 
+				background: url();
+				font: bold 40px Helvetica, Sans-Serif; color: #b6b6b1; text-align: center;
+			} 
+				#content #main .post p.date span {
+					font: normal 20px Helvetica, Sans-Serif;
+					display: block; margin: -5px 0 0 0; 
+				}
+			#content #main .post ul.meta {
+				float: left; list-style: none; margin: 0 0 30px 75px; overflow: hidden;
+				font: 16px Helvetica, Sans-Serif; color: #b6b6b1;
+			}
+				#content #main .post ul.meta li {
+					float: left; margin: 0 20px 0 0;
+				}
+					#content #main .post ul.meta li.comments {
+						padding: 0 0 0 32px; background: url() left center no-repeat;
+					}
+			#content #main .post .post-content {
+				clear: both;
+			}	
+  
+      #content #main .post .post-content p {
+				color:#ffffff;
+			}	
+		
+			#content #main .pagination {
+				margin: 0 0 60px 0; overflow: hidden;
+			} 
+				#content #main .pagination p {
+					margin: 0;
+				}
+	
+			#content #main .pagination p a {
+				display: block; width: 102px; height: 33px; overflow: hidden;
+				background: url(); font-size: 16px;
+			}
+				#content #main .pagination p.prev a {
+					float: left; padding: 14px 0 0 46px;
+				}
+				#content #main .pagination p.next a {
+					float: right; text-align: right; padding: 14px 46px 0 0;
+					background-position: 0 -47px;
+				}
