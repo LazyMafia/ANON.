@@ -96,6 +96,10 @@ app.get('/support', function(req, res){
 	res.render('support');
 });
 
+// Category Route
+let category = require('./routes/category');
+app.use('/:category', category);
+
 // Post Route
 let posts = require('./routes/posts');
 app.use('/posts', posts);
