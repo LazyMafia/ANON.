@@ -6,10 +6,7 @@ var categorySchema = mongoose.Schema({
 	about: String,
 	create_date: Date,
 	subscribers: Number,
-	img:{
-		data: Buffer,
-		contentType: String
-	},
+	img: String,
 	thread:[{
 		name: String,
 		about: String,
