@@ -728,7 +728,7 @@ Sidebar
 }
 
 /* page content*/
-.content-wrapper .card{
+.content-wrapper .WATCH-OUT-card .card{
   width: 50%;
   height: 100%;
   margin: 0;
@@ -906,7 +906,11 @@ Sidebar
 }	
 
 	#content #main {
-		width: 684px; float: left; 
+    width: 684px; float: left; 
+    background-color: #211f27; 
+    text-align: center;
+    padding: 15px 15px 15px ;
+    
 	}	
 		#content #main .post {
       text-align: center;
@@ -961,4 +965,37 @@ Sidebar
 				#content #main .pagination p.next a {
 					float: right; text-align: right; padding: 14px 46px 0 0;
 					background-position: 0 -47px;
-				}
+        }
+
+        .post-content{
+          padding-top: 15px;
+          width: 60%;
+          text-align: center;
+        }
+
+        .post-content .main .card p.date {
+          position: absolute; left: 0; top: 0; padding: 1px 7px 4px 7px; 
+          background: url();
+          font: bold 25px Helvetica, Sans-Serif; color: #3e454c; text-align: center;
+        }
+
+        .post-content .main .card ul.meta {
+          float: center; list-style: none; overflow: hidden;
+          font: 16px Helvetica, Sans-Serif; color: #777c81;
+        }
+
+        .post-content .main .card ul.meta li {
+          float: center;
+          padding-top: 10px;
+        }
+        
+        .post-content .main .card ul.meta li.comments {
+          padding-top: 10px;;
+        }
+
+        .post-content .main .card .card-title {
+          font-size: 20px;
+          font: bold;
+        }
+
+        
