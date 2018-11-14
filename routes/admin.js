@@ -50,7 +50,7 @@ router.post('/add', upload.single('categoryImage'), function(req, res){
 	if(!req.fileValidationError){
 		// Add the category
 		const category = new Category({
-			name: req.body.name,
+			name: req.body.name.toLowerCase(),
 			about: req.body.about,
 			create_date: Date.now(),
 			img: req.file.path

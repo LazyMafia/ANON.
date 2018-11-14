@@ -7,8 +7,8 @@ let User = require('../models/user');
 let Category = require('../models/category');
 
 // Show Category
-router.get('/', function(req, res){
-	Category.findOne({name: req.params.category}, function(err, category){
+router.get('/:category', function(req, res){
+	Category.findOne({name: req.params.category.toLowerCase()}, function(err, category){
 		res.render('category', {
 			category:category
 		});

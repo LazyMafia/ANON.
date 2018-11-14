@@ -125,7 +125,7 @@ app.use('/login', login);
 
 // Category Route
 let category = require('./routes/category');
-app.use('/:category', category);
+app.use('/category', category);
 
 // 404 Route
 app.get('*', function(req, res){
