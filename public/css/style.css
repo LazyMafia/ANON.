@@ -758,11 +758,11 @@ Sidebar
 
 .loginbox {
   width: 320px;
-  height: 420px;
+  height: 410px;
   background-color: #1c1d20;
   color: #fff;
-  top: 50%;
-  left:50%;
+  top: 60%;
+  left: 58%;
   position: absolute;
   transform: translate(-50%, -50%);
   box-sizing: border-box;
@@ -771,7 +771,7 @@ Sidebar
 
 .loginbox > #LoginHeader {
   color: #f37735;
-  margin: 0;
+  margin: 25px;
   padding: 0 0 28px;
   text-align: center;
   font-size: 34px;
@@ -821,11 +821,11 @@ Sidebar
 /*SignUp Form*/
 .signupbox {
   width: 320px;
-  height: 420px;
+  height: 440px;
   background-color: #1c1d20;
   color: #fff;
-  top: 50%;
-  left:50%;
+  top: 60%;
+  left:58%;
   position: absolute;
   transform: translate(-50%, -50%);
   box-sizing: border-box;
@@ -834,7 +834,7 @@ Sidebar
 
 .signupbox > #SignupHeader {
   color: #f37735;
-  margin: 0;
+  margin-top: 25px;
   padding: 0 0 28px;
   text-align: center;
   font-size: 34px;
@@ -919,12 +919,12 @@ Sidebar
 		}
 			#content #main .post h2 {
 				float: left; margin: 0 0 10px 75px;
-				font: 24px Lucida Grande, Lucida Sans Unicode, Helvetica, Sans-Serif; letter-spacing: normal;
+				font: 24px Lucida Grande, Lucida Sans Unicode, Helvetica, Sans-Serif; letter-spacing: normal; color: white;
 			}
 			#content #main .post p.date {
 				position: absolute; left: 0; top: 0; padding: 4px 7px 4px 7px; 
 				background: url();
-				font: bold 40px Helvetica, Sans-Serif; color: #b6b6b1; text-align: center;
+				font: bold 40px Helvetica, Sans-Serif; color: white; text-align: center;
 			} 
 				#content #main .post p.date span {
 					font: normal 20px Helvetica, Sans-Serif;
@@ -932,7 +932,7 @@ Sidebar
 				}
 			#content #main .post ul.meta {
 				float: left; list-style: none; margin: 0 0 30px 75px; overflow: hidden;
-				font: 16px Helvetica, Sans-Serif; color: #b6b6b1;
+				font: 16px Helvetica, Sans-Serif; color: white;
 			}
 				#content #main .post ul.meta li {
 					float: left; margin: 0 20px 0 0;
@@ -971,17 +971,18 @@ Sidebar
           padding-top: 15px;
           width: 60%;
           text-align: center;
+          margin-bottom: 15px;
         }
 
         .post-content .main .card p.date {
           position: absolute; left: 0; top: 0; padding: 1px 7px 4px 7px; 
           background: url();
-          font: bold 25px Helvetica, Sans-Serif; color: #3e454c; text-align: center;
+          font: bold 25px Helvetica, Sans-Serif; color: white; text-align: center;
         }
 
         .post-content .main .card ul.meta {
           float: center; list-style: none; overflow: hidden;
-          font: 16px Helvetica, Sans-Serif; color: #777c81;
+          font: 16px Helvetica, Sans-Serif; color: white;
         }
 
         .post-content .main .card ul.meta li {
@@ -990,7 +991,7 @@ Sidebar
         }
         
         .post-content .main .card ul.meta li.comments {
-          padding-top: 10px;;
+          padding-top: 10px;
         }
 
         .post-content .main .card .card-title {
@@ -998,4 +999,20 @@ Sidebar
           font: bold;
         }
 
+        .card {
+          background-color:#363a51;
+        }
+
+        .card .card-text {
+          color: white;
+          line-height: 1.5  ;
+        }
+
+        .card .card-title {
+          color: white;
+        }
+
+        .card .card-header {
+          color: whitesmoke;
+        }
         
