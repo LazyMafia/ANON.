@@ -1,13 +1,17 @@
 const express = require('express');
 const multer = require('multer');
 const router = express.Router();
+const sizeOf = require('image-size');
+var fileSquare;
+var imageName;
 
 const storage = multer.diskStorage({
 	destination: function(req, file, cb) {
 		cb(null, './public/uploads');
 	},
 	filename: function(req, file, cb){
-		cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname);
+		imageName = new Date().toISOString().replace(/:/g, '-') + file.originalname;
+		cb(null, imageName);
 	}
 });
 
@@ -24,7 +28,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
 	storage, 
 	limits: {
-		fileSize: 1024 * 1024 * 5
+		fileSize: 1024 * 1024
 	},
 	fileFilter
 });
@@ -48,6 +52,13 @@ router.get('/', function(req, res){
 router.post('/add', upload.single('categoryImage'), function(req, res){
 	// Checks if the file is an appropriate format
 	if(!req.fileValidationError){
+		sizeOf('./public/uploads/' + imageName, function(err, dimensions){
+			console.log(dimensions.width + "   " + dimensions.height);
+			if(dimensions.width !== dimensions.height){
+				req.flash('error', 'Image must be a square.');
+				res.redirect('/admin');
+			} 
+		});
 		// Add the category
 		const category = new Category({
 			name: req.body.name.toLowerCase(),

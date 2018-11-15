@@ -4,5 +4,6 @@
 
 <h1><%= category.name.charAt(0).toUpperCase() + category.name.slice(1) %></h1>
 <p><%= category.about %></p>
+<img src="../uploads/<%= category.img.slice(15) %>">
 
 <% include ../partials/footer.ejs %>

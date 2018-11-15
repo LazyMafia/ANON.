@@ -13,8 +13,8 @@
 	<link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
 	<script src="js/modernizr.js"></script> <!-- Modernizr -->
   	<!--Title-->
-	<title>Anon.</title>
-</head>
+    <title>Anon. - Welcome</title>
+    </head>
 <body>
 	<header class="cd-main-header">
 		<a href="#0" class="cd-logo"><img src="img/cd-logo.svg" alt="Logo"></a>
@@ -30,17 +30,24 @@
 		<nav class="cd-nav">
 			<ul class="cd-top-nav">
 				<li><a href="welcome-page.html">Welcome</a></li>
-				<li><a href="#0">Support</a></li>
+				<li><a href="/support">Support</a></li>
 				<li class="has-children account">
 					<a href="#0">
 						Account
 					</a>
 
 					<ul>
-
-						<li><a href="#0">My Account</a></li>
-						<li><a href="#0">Edit Account</a></li>
-						<li><a href="#0">Logout</a></li>
+					<!-- <% if(user){ %>
+						<% if(user.username == 'admin'){ %> 
+							<li><a href="/admin">Admin</a></li>
+						<% } %>
+						<li><a href="/settings">Settings</a></li>
+						<li><a href="/logout">Logout</a></li>
+					<% } else { %>
+						<li><a href="/login">Login</a></li>
+						<li><a href="/register">Sign Up</a></li>
+					<% } %> -->
+				
 					</ul>
 				</li>
 			</ul>
@@ -49,6 +56,10 @@
 
 	<main class="cd-main-content">
 		<nav class="cd-side-nav">
+			<ul>
+				<li class="cd-label">Action</li>
+				<li class="action-btn"><a href="/posts/add">Post!</a></li>
+			</ul>
 			<ul>
 				<li class="cd-label">Main</li>
 				<li class="has-children overview">
@@ -112,35 +123,64 @@
 				</li>
 			</ul>
 
-			<ul>
-				<li class="cd-label">Action</li>
-				<li class="action-btn"><a href="#0">+ Button</a></li>
-			</ul>
+			
 		</nav>
 
 		<div class="content-wrapper">
-			<h1>ANON.</h1>
-			<div class="WATCH-OUT-card">
-			<center>
-			<div class="card">
-					<div class="card-header">
-					  Important
-					</div>
-					<div class="card-body">
-					  <h5 class="card-title">Watch Out!</h5>
-					  <p class="card-text">This site contains some sensitive conent.</p>
-					  <a href="index.html" class="btn btn-primary">Go to site.</a>
-					</div>
-				  </div>
-			</center>
-			</
-		</div> <!-- .content-wrapper -->
 
-	</main> <!-- .cd-main-content -->
-
-<script src="js/sweetalert/dist/sweetwater.min.js"></script>
-<script src="js/jquery-2.1.4.js"></script>
-<script src="js/jquery.menu-aim.js"></script>
-<script src="js/main.js"></script> <!-- Resource jQuery -->
-</body>
-</html>
+				<div class="WATCH-OUT-card" id="content-warning">
+						<center>
+						<div class="card">
+							<div class="card-header">
+								Important
+							</div>
+							<div class="card-body">
+								<h5 class="card-title">Watch Out!</h5>
+								<p class="card-text">This site contains sensitive content.</p>
+								<a href="index.html" class="btn btn-primary">Go to site.</a>
+							</div>
+						</div>
+						</center>
+					</div>
+					
+					<div id="welcomeContainer">
+						<div class="signupbox">
+							<div id="registerMessage">
+								<!--<%- messages('message', locals) %>-->
+							</div>
+					
+							<h1 id = "SignupHeader">Sign Up Here</h1>
+					
+							<form action="/register" method="POST">
+								<p class="signupText">Username</p>
+								<input type="text" name="username" placeholder="Enter Username">    
+								<p class="signupText">Password</p>
+								<input type="password" name="password" placeholder="Enter Password">
+								<p class="signupText">Confirm Pasword</p>
+								<input type="password" name="password2" placeholder="Enter Password">
+								<input type="submit" name="" value="Sign Up">
+							</form> 
+						</div>
+						<p>Or</p>
+						<div class="loginbox">
+							<div id="registerMessage">
+								<!--<%- messages('message', locals) %>-->
+							</div>
+							<h1 id = "LoginHeader">Login Here</h1>
+							<form action="/login" method="POST">
+								<p class="LoginText">Username</p>
+								<input type="text" name="username" placeholder="Enter Username">
+								<p class="LoginText">Password</p>
+								<input type="password" name="password" placeholder="Enter Password">
+								<input type="submit" name="" value="Login">
+							</form> 
+						</div>
+					</div>
+				</div> <!-- .content-wrapper -->
+			</main> <!-- .cd-main-content -->
+			<script src="js/sweetalert/dist/sweetwater.min.js"></script>
+			<script src="js/jquery-2.1.4.js"></script>
+			<script src="js/jquery.menu-aim.js"></script>
+			<script src="js/main.js"></script> <!-- Resource jQuery -->
+			</body>
+			</html>

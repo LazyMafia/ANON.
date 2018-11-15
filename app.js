@@ -70,13 +70,22 @@ app.get('*', function(req, res, next){
 	next();
 });
 
+app.post('*', function(req, res, next){
+	res.locals.user = req.user || null;
+	next();
+});
+
 // Load View Engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // Home Route
 app.get('/', function(req, res){
-	res.render('index');
+	if(req.user != null){
+		res.render('index');
+	} else {
+		res.render('welcome');
+	}
 });
 
 // Comments Route
