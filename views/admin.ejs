@@ -1,0 +1,20 @@
+<% include ../partials/header-top.ejs %>
+<title>Anon. - Admin</title>
+<% include ../partials/header-bottom.ejs %>
+
+<h1>ANON.</h1>
+<h2 id = "MakePost">Add a Category</h2>
+<div id="adminMessage">
+	<%- messages('message', locals) %>
+</div>
+<form enctype="multipart/form-data" action="/admin/add" method="POST" class="addPost">
+	<input type="text" name="name" placeholder="Name">
+	<br>
+	<textarea name="about"></textarea>
+	<br>
+	<input name="categoryImage" type="file"/>
+	<br>
+	<input type="submit" name="" value="Add Category">
+</form>
+
+<% include ../partials/footer.ejs %>

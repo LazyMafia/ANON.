@@ -821,7 +821,11 @@ Sidebar
 /*SignUp Form*/
 .signupbox {
   width: 320px;
+<<<<<<< HEAD
   height: 440px;
+=======
+  height: 505px;
+>>>>>>> master
   background-color: #1c1d20;
   color: #fff;
   top: 60%;
@@ -890,12 +894,13 @@ Sidebar
   padding-top: 10px;
 }
 
-#registerError
+#adminMessage
 {
-  height: 70px;
+  height: 50px;
   text-align: center;
   line-height: 60px;
   padding-top: 10px;
+  color: White;
 }
 
 /*post page content*/

@@ -96,13 +96,13 @@ app.get('/support', function(req, res){
 	res.render('support');
 });
 
-// Category Route
-let category = require('./routes/category');
-app.use('/:category', category);
-
 // Post Route
 let posts = require('./routes/posts');
 app.use('/posts', posts);
+
+// Settings Route
+let settings = require('./routes/settings');
+app.use('/settings', settings);
 
 // Admin Route
 let admin = require('./routes/admin');
@@ -122,6 +122,10 @@ app.use('/register', register);
 // Login Routes
 let login = require('./routes/login');
 app.use('/login', login);
+
+// Category Route
+let category = require('./routes/category');
+app.use('/category', category);
 
 // 404 Route
 app.get('*', function(req, res){

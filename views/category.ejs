@@ -1,0 +1,8 @@
+<% include ../partials/header-top.ejs %>
+<title>Anon. - <%= category.name.charAt(0).toUpperCase() + category.name.slice(1) %></title>
+<% include ../partials/header-bottom.ejs %>
+
+<h1><%= category.name.charAt(0).toUpperCase() + category.name.slice(1) %></h1>
+<p><%= category.about %></p>
+
+<% include ../partials/footer.ejs %>
