@@ -7,7 +7,7 @@ let User = require('../models/user');
 
 // Show Sign Up Form
 router.get('/', function(req, res){
-	res.render("register");
+	res.render('welcome');
 });
 
 // Add user to database
@@ -65,7 +65,7 @@ router.post('/', function(req, res){
 	function newUser() {
 		if(errors){
 			req.flash('error', errors[0].msg);
-			res.render('register');
+			res.render('welcome');
 		} else {
 			let newUser = new User({
 				username:username,
@@ -85,7 +85,7 @@ router.post('/', function(req, res){
 							return;
 						} else {
 							req.flash('success','You are now registered.');
-							res.redirect('/login');
+							res.redirect('/login2');
 						}
 					});
 				});

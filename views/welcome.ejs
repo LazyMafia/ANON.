@@ -1,0 +1,54 @@
+<% include ../partials/header-top.ejs %>
+<title>Anon. - Welcome</title>
+<% include ../partials/header-bottom.ejs %>
+
+<div class="WATCH-OUT-card" id="content-warning">
+	<center>
+	<div class="card">
+        <div class="card-header">
+            Important
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Watch Out!</h5>
+            <p class="card-text">This site contains sensitive content.</p>
+            <a href="index.html" class="btn btn-primary">Go to site.</a>
+        </div>
+    </div>
+    </center>
+</div>
+
+<div id="welcomeContainer">
+    <div class="signupbox">
+        <div id="registerMessage">
+            <%- messages('message', locals) %>
+        </div>
+
+        <h1 id = "SignupHeader">Sign Up Here</h1>
+
+        <form action="/register" method="POST">
+            <p class="signupText">Username</p>
+            <input type="text" name="username" placeholder="Enter Username">    
+            <p class="signupText">Password</p>
+            <input type="password" name="password" placeholder="Enter Password">
+            <p class="signupText">Confirm Pasword</p>
+            <input type="password" name="password2" placeholder="Enter Password">
+            <input type="submit" name="" value="Sign Up">
+        </form> 
+    </div>
+    <p id="welcome-or">Or</p>
+    <div class="loginbox">
+        <div id="registerMessage">
+            <%- messages('message', locals) %>
+        </div>
+        <h1 id = "LoginHeader">Login Here</h1>
+        <form action="/login" method="POST">
+            <p class="LoginText">Username</p>
+            <input type="text" name="username" placeholder="Enter Username">
+            <p class="LoginText">Password</p>
+            <input type="password" name="password" placeholder="Enter Password">
+            <input type="submit" name="" value="Login">
+        </form> 
+    </div>
+</div>
+
+<% include ../partials/footer.ejs %>

@@ -761,17 +761,17 @@ Sidebar
   height: 410px;
   background-color: #1c1d20;
   color: #fff;
-  top: 60%;
-  left: 58%;
   position: absolute;
-  transform: translate(-50%, -50%);
   box-sizing: border-box;
   padding: 0 30px 70px 30px;
+  float: left;
+  top: 30%;
+  left: 45%;
 }
 
 .loginbox > #LoginHeader {
   color: #f37735;
-  margin: 25px;
+  margin-top: 25px;
   padding: 0 0 28px;
   text-align: center;
   font-size: 34px;
@@ -824,21 +824,20 @@ Sidebar
 <<<<<<< HEAD
   height: 440px;
 =======
-  height: 505px;
 >>>>>>> master
   background-color: #1c1d20;
   color: #fff;
-  top: 60%;
-  left:58%;
   position: absolute;
-  transform: translate(-50%, -50%);
   box-sizing: border-box;
   padding: 0 30px 70px;
+  float: left;
+  top: 30%;
+  left: 15%;
 }
 
 .signupbox > #SignupHeader {
   color: #f37735;
-  margin-top: 25px;
+  margin-top: 0px;
   padding: 0 0 28px;
   text-align: center;
   font-size: 34px;
@@ -901,6 +900,20 @@ Sidebar
   line-height: 60px;
   padding-top: 10px;
   color: White;
+}
+
+#content-warning {
+  margin-top: 50px;
+}
+
+#welcomeContainer {
+  float: left;
+}
+
+#welcome-or {
+  font-size: 1rem;
+  left: 30%;
+  top: 30%;
 }
 
 /*post page content*/
