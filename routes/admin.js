@@ -2,6 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const router = express.Router();
 const sizeOf = require('image-size');
+var fs = require('fs');
 var fileSquare;
 var imageName;
 
@@ -55,24 +56,26 @@ router.post('/add', upload.single('categoryImage'), function(req, res){
 		sizeOf('./public/uploads/' + imageName, function(err, dimensions){
 			console.log(dimensions.width + "   " + dimensions.height);
 			if(dimensions.width !== dimensions.height){
+				fs.unlinkSync('./public/uploads/' + imageName);
 				req.flash('error', 'Image must be a square.');
 				res.redirect('/admin');
-			} 
-		});
-		// Add the category
-		const category = new Category({
-			name: req.body.name.toLowerCase(),
-			about: req.body.about,
-			create_date: Date.now(),
-			img: req.file.path
-		});
+			} else {
+				// Add the category
+				const category = new Category({
+					name: req.body.name.toLowerCase(),
+					about: req.body.about,
+					create_date: Date.now(),
+					img: req.file.path
+				});
 
-		category.save(function(err){
-			if(err){
-				console.log(err);
-			} else{
-				req.flash('success', 'Category has been added.');
-				res.redirect('/admin');
+				category.save(function(err){
+					if(err){
+						console.log(err);
+					} else{
+						req.flash('success', 'Category has been added.');
+						res.redirect('/admin');
+					}
+				});
 			}
 		});
 	} else {

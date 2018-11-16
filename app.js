@@ -141,5 +141,5 @@ app.get('*', function(req, res){
 	res.render('error');
 });
 
-app.listen(3000);
+app.listen(process.env.port || 3000);
 console.log("Running on port 3000");
