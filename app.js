@@ -1,4 +1,5 @@
 const express = require('express');
+const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
@@ -8,13 +9,11 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const passport = require('passport');
 const config = require('./config/database');
-
+const server = require('http').createServer(app);
+const io = require('socket.io').listen(server);
 // Connect to Mongoose
 mongoose.connect(config.database);
 var db = mongoose.connection;
-
-// Init App
-var app = express();
 
 // parse application/json
 app.use(bodyParser.json());
@@ -78,6 +77,10 @@ app.post('*', function(req, res, next){
 // Load View Engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+io.on('connection', function(socket){
+	console.log('a user connected');
+});
 
 // Home Route
 app.get('/', function(req, res){

@@ -54,7 +54,6 @@ router.post('/add', upload.single('categoryImage'), function(req, res){
 	// Checks if the file is an appropriate format
 	if(!req.fileValidationError){
 		sizeOf('./public/uploads/' + imageName, function(err, dimensions){
-			console.log(dimensions.width + "   " + dimensions.height);
 			if(dimensions.width !== dimensions.height){
 				fs.unlinkSync('./public/uploads/' + imageName);
 				req.flash('error', 'Image must be a square.');

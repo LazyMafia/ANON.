@@ -11,20 +11,21 @@
         <div class="card-body">
             <h5 class="card-title">Watch Out!</h5>
             <p class="card-text">This site contains sensitive content.</p>
-            <a href="/" class="btn btn-primary">Go to site.</a>
+            <a href="/" class="btn btn-primary" id="welcome-continue">Go to site.</a>
         </div>
     </div>
     </center>
 </div>
 
+<div class="messages">
+    <center>
+        <%- messages('message', locals) %>
+    </center>
+</div>
+
 <div id="welcomeContainer">
     <div class="signupbox">
-        <div id="registerMessage">
-            <%- messages('message', locals) %>
-        </div>
-
         <h1 id = "SignupHeader">Sign Up Here</h1>
-
         <form action="/register" method="POST">
             <p class="signupText">Username</p>
             <input type="text" name="username" placeholder="Enter Username">    
@@ -35,11 +36,12 @@
             <input type="submit" name="" value="Sign Up">
         </form> 
     </div>
-    <p>Or</p>
+    
+    <div id="or-message">
+        <p>Or</p>
+    </div>
+
     <div class="loginbox">
-        <div id="registerMessage">
-            <%- messages('message', locals) %>
-        </div>
         <h1 id = "LoginHeader">Login Here</h1>
         <form action="/login" method="POST">
             <p class="LoginText">Username</p>
@@ -50,5 +52,15 @@
         </form> 
     </div>
 </div>
-
-<% include ../partials/footer.ejs %>
+</div> <!-- .content-wrapper -->
+</main> <!-- .cd-main-content -->
+<script src="../js/sweetalert/dist/sweetwater.min.js"></script>
+<script src="../js/jquery-2.1.4.js"></script>
+<script src="../js/jquery.menu-aim.js"></script>
+<script src="../js/main.js"></script> <!-- Resource jQuery -->
+<script src="socket.io/socket.io.js"></script> <!-- Backend Connection -->
+<script>
+  var socket = io.connect('http://localhost');
+</script>
+</body>
+</html>
