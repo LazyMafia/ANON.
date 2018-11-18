@@ -134,3 +134,12 @@ jQuery(document).ready(function(){
 	}
 });
 
+//Rich Text Box
+function enableEditMode(){
+	richTextField.document.designMode = "On";
+}
+
+function execCmd(command){
+	richTextField.document.exeCommand(command, false, null);
+}
+
