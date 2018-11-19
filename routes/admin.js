@@ -42,8 +42,10 @@ let Category = require('../models/category');
 // Show Admin Panel
 router.get('/', function(req, res){
 	// Checks if admin is logged in
-	if(req.user.username == "admin"){
-		res.render('admin');
+	if(req.user){
+		if(req.user.username == "admin"){
+			res.render('admin');
+		}
 	} else {
 		res.render('error');
 	}
