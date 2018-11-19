@@ -2,8 +2,8 @@ const express = require('express');
 const multer = require('multer');
 const router = express.Router();
 const sizeOf = require('image-size');
-var fs = require('fs');
-var fileSquare;
+const fs = require('fs');
+const jimp = require('jimp');
 var imageName;
 
 const storage = multer.diskStorage({
@@ -54,17 +54,38 @@ router.post('/add', upload.single('categoryImage'), function(req, res){
 	// Checks if the file is an appropriate format
 	if(!req.fileValidationError){
 		sizeOf('./public/uploads/' + imageName, function(err, dimensions){
+			// Checks if image is a square
 			if(dimensions.width !== dimensions.height){
 				fs.unlinkSync('./public/uploads/' + imageName);
 				req.flash('error', 'Image must be a square.');
 				res.redirect('/admin');
+			// Checks if image size is greater than 249 pixels
+			} else if(dimensions.width < 250){
+				fs.unlinkSync('./public/uploads/' + imageName);
+				req.flash('error', 'Image must be at least 250 by 250 pixels.');
+				res.redirect('/admin');
+			// Checks if Name or About parameters are missing
+			} else if(req.body.name.split(' ').join('') == "" || req.body.about.split(' ').join('') == ""){
+				fs.unlinkSync('./public/uploads/' + imageName);
+				req.flash('error', '"Name" or "About" Parameters Missing');
+				res.redirect('/admin');
+			// No Errors
 			} else {
-				// Add the category
+				// Resize Image
+				jimp.read('./public/uploads/' + imageName, function(err, img){
+					if(err){
+						console.log(err)
+					}
+					img.resize(250, 250).write('./public/uploads/' + imageName.slice(0, imageName.lastIndexOf('.')) + '.png', function(){
+						fs.unlinkSync('./public/uploads/' + imageName);
+					});
+				});
+
 				const category = new Category({
 					name: req.body.name.toLowerCase(),
 					about: req.body.about,
 					create_date: Date.now(),
-					img: req.file.path
+					img: 'public\\uploads\\' + imageName.slice(0, imageName.lastIndexOf('.')) + '.png'
 				});
 
 				category.save(function(err){

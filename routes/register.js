@@ -85,7 +85,7 @@ router.post('/', function(req, res){
 							return;
 						} else {
 							req.flash('success','You are now registered.');
-							res.redirect('/login2');
+							res.redirect('/login');
 						}
 					});
 				});
