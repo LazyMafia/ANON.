@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const http = require('http');
 const mongoose = require('mongoose');
 const path = require('path');
 const bcrypt = require('bcryptjs');
@@ -9,8 +10,25 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const passport = require('passport');
 const config = require('./config/database');
-const server = require('http').createServer(app);
+
+// Socket.IO
+const port = process.env.PORT || 3000;
+const server = app.listen(port, function(){
+	console.log('Running on port: ' + port);
+});
 const io = require('socket.io').listen(server);
+var welcomeContinue = false;
+
+io.on('connection', function(socket){
+	socket.on('welcomeContinue', function(){
+		welcomeContinue = true;
+	});
+
+	socket.on('disconnect', function(){
+		welcomeContinue = false;
+	});
+})
+
 // Connect to Mongoose
 mongoose.connect(config.database);
 var db = mongoose.connection;
@@ -78,13 +96,9 @@ app.post('*', function(req, res, next){
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-io.on('connection', function(socket){
-	console.log('a user connected');
-});
-
 // Home Route
 app.get('/', function(req, res){
-	if(req.user != null){
+	if(req.user != null || welcomeContinue){
 		res.render('index');
 	} else {
 		res.render('welcome');
@@ -101,6 +115,12 @@ app.get('/comments', function(req, res){
 			res.send(i + 1 + ". " + comments[1].user_comments[i].body);
 		}
 	})
+});
+
+// Welcome Route
+app.get('/welcome', function(req, res){
+	welcomeContinue = false;
+	res.redirect('/');
 });
 
 // Support Route
@@ -143,6 +163,3 @@ app.use('/category', category);
 app.get('*', function(req, res){
 	res.render('error');
 });
-
-app.listen(process.env.port || 3000);
-console.log("Running on port 3000");

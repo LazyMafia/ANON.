@@ -1,6 +1,4 @@
-<% include ../partials/header-top.ejs %>
-<title>Anon. - Welcome</title>
-<% include ../partials/header-bottom.ejs %>
+<% include ../partials/welcome-header.ejs %>
 
 <div class="WATCH-OUT-card" id="content-warning">
 	<center>
@@ -58,9 +56,14 @@
 <script src="../js/jquery-2.1.4.js"></script>
 <script src="../js/jquery.menu-aim.js"></script>
 <script src="../js/main.js"></script> <!-- Resource jQuery -->
-<script src="socket.io/socket.io.js"></script> <!-- Backend Connection -->
+<script src="/socket.io/socket.io.js"></script> <!-- Backend Connection -->
 <script>
-  var socket = io.connect('http://localhost');
+    var socket = io("localhost:3000");
+
+    $('#welcome-continue').on('click', function(event){
+		socket.emit('welcomeContinue');
+    });
+    
 </script>
 </body>
 </html>
