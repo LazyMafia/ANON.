@@ -139,3 +139,7 @@ function execCmd(command){
 	richTextField.document.exeCommand(command, false, null);
 }
 
+var a = 3;
+
+if(a ===  5)
+

@@ -754,22 +754,17 @@ Sidebar
 /* Login Page */
 
 .loginbox {
-  width: 320px;
-  height: 410px;
-  color: #fff;
+  width: 350px;
+  height: 420px; 
   position: absolute;
-  box-sizing: border-box;
-  padding: 70px 30px;
-  float: left;
-<<<<<<< Updated upstream
-  top: 30%;
+  top: 65%;
   left: 46%;
-=======
-  top: 40%;
-  left: 50%;
->>>>>>> Stashed changes
-}
+  transform: translate(-50%, -50%);
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, .5)
 
+}
+ 
 .loginbox > #LoginHeader {
   color: #f37735;
   margin-top: 25px;
@@ -819,26 +814,20 @@ Sidebar
   color: #211f27;
 }
 
-/*SignUp Form*/
+
 .signupbox {
   width: 320px;
-  height: 440px;
+  height: 470px;
   background-color: #1c1d20;
   color: #fff;
   position: absolute;
   box-sizing: border-box;
-<<<<<<< Updated upstream
-  padding: 70px 30px;
-  float: left;
-  top: 30%;
-  left: 15%;
-=======
   padding: 0 30px 70px;
   top: 40%;
-  left: 25%;
+  left: 45.5%;
   text-align: center;
   margin-bottom: 5%;
->>>>>>> Stashed changes
+  margin-top: 15px;
 }
 
 .signupbox > #SignupHeader {
@@ -889,7 +878,7 @@ Sidebar
   background: #f37735;
   color: #211f27;
 }
-
+*/
 /* EJS */
 #registerMessage
 {
