@@ -69,6 +69,10 @@ jQuery(document).ready(function(){
 		}
 	});
 
+	$('#welcome-continue').on('click', function(event){
+		console.log("CLICKED");
+	})
+
 	//on desktop - differentiate between a user trying to hover over a dropdown item vs trying to navigate into a submenu's contents
 	sidebar.children('ul').menuAim({
         activate: function(row) {
@@ -138,8 +142,4 @@ function enableEditMode(){
 function execCmd(command){
 	richTextField.document.exeCommand(command, false, null);
 }
-
-var a = 3;
-
-if(a ===  5)
 
