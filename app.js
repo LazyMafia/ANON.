@@ -17,17 +17,17 @@ const server = app.listen(port, function(){
 	console.log('Running on port: ' + port);
 });
 const io = require('socket.io').listen(server);
-var welcomeContinue = false;
+global.welcomeContinue = false;
 
 io.on('connection', function(socket){
 	socket.on('welcomeContinue', function(){
-		welcomeContinue = true;
+		global.welcomeContinue = true;
 	});
 
 	socket.on('disconnect', function(){
-		welcomeContinue = false;
+		//global.welcomeContinue = false;
 	});
-})
+});
 
 // Connect to Mongoose
 mongoose.connect(config.database);
@@ -97,13 +97,15 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // Home Route
-app.get('/', function(req, res){
-	if(req.user != null || welcomeContinue){
-		res.render('index');
-	} else {
-		res.render('welcome');
-	}
-});
+// app.get('/', function(req, res){
+// 	if(req.user != null || welcomeContinue){
+// 		res.render('viewpost');
+// 	} else {
+// 		res.render('welcome');
+// 	}
+// });
+let viewPosts = require('./routes/index');
+app.use('/', viewPosts);
 
 // Comments Route
 app.get('/comments', function(req, res){
