@@ -12,6 +12,8 @@ var trendingPosts = [];
 let User = require('../models/user');
 // Bring in Category Model
 let Category = require('../models/category');
+// Bring in Post Model
+let Post = require('../models/post');
 
 router.get('/', function(req, res){
     if(req.user != null){
@@ -27,7 +29,6 @@ router.get('/', function(req, res){
     } else {
         res.render('welcome');
     }
-    console.log('welcomeContinue: ' + welcomeContinue);
 });
 
 function generatePostsUser(){
@@ -72,7 +73,11 @@ function generateInterestsPost(){
 
 function generateTrendingPost(){
     console.log('Trending');
-
+    for(var i = 0; i < 15; i++){
+        Post.findOne({}, function(err, post){
+            
+        });
+    }
 }
 
 function generateNewPost(){
