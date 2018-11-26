@@ -1,11 +1,13 @@
 const express = require('express');
 const router = express.Router();
+var postGenerationRequests = 0;
 var interestPercentage = 45;
 var userTrendingPercentage = 38;
 var trendingPercentage = 65;
 var userNewPercentage = 15;
 var newPercentage = 30;
 var posts = [];
+var trendingPostsRaw = [];
 var trendingPosts = [];
 
 // Bring in User Model
@@ -17,11 +19,13 @@ let Post = require('../models/post');
 
 router.get('/', function(req, res){
     if(req.user != null){
+        postGenerationRequests++;
         generatePostsUser();
         res.render('viewpost', {
             posts:posts
         });
     } else if(welcomeContinue){
+        postGenerationRequests++;
         generatePosts();
         res.render('viewpost', {
             posts:posts
@@ -73,11 +77,24 @@ function generateInterestsPost(){
 
 function generateTrendingPost(){
     console.log('Trending');
-    for(var i = 0; i < 15; i++){
-        Post.findOne({}, function(err, post){
-            
+    Category.find({}, function(err, posts){
+        posts.forEach(function(post){
+            // Find all posts that are less than 7 days old
+            if((Date.now()-Date.parse(post.create_date))/(1000*3600*24) < 7){
+                trendingPostsRaw.push(post);
+            } else{
+                console.log("More than 7 days old");
+            }
         });
-    }
+
+        trendingPostsRaw.forEach(function(post){
+            if(trendingPosts.length/postGenerationRequests < 15){
+                trendingPosts.push(post);
+            } else{
+
+            }
+        });
+    });
 }
 
 function generateNewPost(){

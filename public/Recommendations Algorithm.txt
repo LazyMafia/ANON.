@@ -1,0 +1,20 @@
+How to rank? Trending, Interests
+Interests: Categories (2) + Threads (5) + User (20)
+Categories: New, Trending, Overview, Popular
+New: Likes + (Favs * 100) + Comments (Post Date < 24hrs)
+Trending: (Likes + (Favs * 100) + Comments) / Post Date (Post Date < 1 Week)
+Popular: Likes + (Favs * 100) + Comments (Default Post Date: 3 Months, Variations: 1 Week, 2 Weeks, 1 Month, 3 Months, 6 Months, 1 Year, No Limit)
+
+Overview: Interests (45%) + Trending (38%) + New (15%) + Popular (2%)
+~
+Generate 15 Posts. Once there are 10 posts left, get 15 more.
+var interestPercentage = 45;
+var userTrendingPercentage = 38;
+var trendingPercentage = 65;
+var userNewPercentage = 30;
+var newPercentage = 15;
+var userPopularPercentage = 5;
+var popularPercentage = 2;
+
+How to find the post with the most likes and favs?
+Add 15 to array, start replacing ones that have less likes
