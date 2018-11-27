@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
+var popularPostTimeframe = 90;
 var postGenerationRequests = 0;
 var interestGenerationCalls = 0;
 var trendingGenerationCalls = 0;
 var newGenerationCalls = 0;
 var popularGenerationCalls = 0;
-var 
 var interestPercentage = 45;
 var userTrendingPercentage = 38;
 var trendingPercentage = 65;
@@ -286,6 +286,99 @@ function generateNewPost(){
 
 function generatePopularPost(){
     console.log('Popular');
+    // DISCLAIMER: Category is being used to test instead of Post due to current inability to sign in and add new posts
+    // HOW TO CHANGE TO POST:
+    // - Category.find() to Post.find()
+    // - post.create_date to post.post_date
+    if(popularPosts.length/postGenerationRequests - newGenerationCalls <= 5){
+        // Find all posts
+        Category.find({}, function(err, posts){
+            posts.forEach(function(post){
+                // Find all posts that are within the popularPostTimeframe
+                if((Date.now()-Date.parse(post.create_date))/(1000*3600*24) < popularPostTimeframe){
+                    newPostsRaw.push(post);
+                }
+            });
+            
+            var postAlreadyChosen = false;
+
+            popularPostsRaw.forEach(function(post){
+                // Checks if the post has already been chosen as a interesting, trending or new post
+                interestPosts.forEach(function(interestPost){
+                    if(post != interestPost){
+                        trendingPosts.forEach(function(trendingPost){
+                            if(post != trendingPost){
+                                newPosts.forEach(function(newPost){
+                                    if(post == newPost){
+                                        postAlreadyChosen = true;
+                                    }
+                                });
+                            } else{
+                                postAlreadyChosen = true;
+                            }
+                        });
+                    } else{
+                        postAlreadyChosen = true;
+                    }
+                });
+
+                if(!postAlreadyChosen){
+                    // Check if there are empty spaces in array that need to be filled
+                    if(popularPosts.length/postGenerationRequests < 10){
+                        popularPosts.push(post);
+                    } else{
+                        popularPosts.forEach(function(existingPost){
+                            // Get value of post that is in popularPost array
+                            var postValue = (existingPost.favs*100) + existingPost.likes + existingPost.comments.length;
+                            popularPostsValue.push(postValue);
+                        });
+
+                        // Get value of post that is being checked
+                        var postValue = (post.favs*100) + post.likes + post.comments.length;
+                        var popularPostToBeReplaced = null;
+                        var i = 0;
+
+                        popularPosts.forEach(function(existingPost){
+                            // Checks if the current post has a greater value than a post in popularPosts
+                            if(postValue > popularPostsValue[i]){
+                                // Checks if it is on the last post in the popularPost array
+                                if(i+1 < popularPosts.length){
+                                    // If there is no other post that has a lesser value
+                                    if(popularPostToBeReplaced == null){
+                                        popularPostToBeReplaced = i;
+                                    } else {
+                                        // Checks if the existingPost has a lesser value than that of the one that was going to be replaced
+                                        if(npopularPostsValue[i] < popularPostToBeReplaced){
+                                            popularPostToBeReplaced = i;
+                                        }
+                                    }
+                                } else{
+                                    // Replaces a existingPost with the current post
+                                    if(popularPostToBeReplaced == null){
+                                        popularPosts[popularPostToBeReplaced] = post;
+                                    } else {
+                                        if(popularPostsValue[i] < popularPostToBeReplaced){
+                                            popularPosts[i] = post;
+                                        }
+                                    }
+                                }
+                            } 
+                            i++;
+                        });
+                    }
+                }
+            });
+            // Rearrange popularPosts in order of value
+            popularPosts.sort(function(a, b){return b-a});
+            // Variable Resets
+            popularPostsValue = [];
+            popularPostsRaw = [];
+        });
+    } else {
+        // Push the popular post to posts array
+        posts.push(popularPosts[popularGenerationCalls]);
+    }
+    popularGenerationCalls++;
 }
 
 module.exports = router;
