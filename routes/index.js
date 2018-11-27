@@ -54,13 +54,13 @@ function generatePostsUser(){
     for(var i = 0; i < 15; i++){
         var rand = Math.floor(Math.random()*100) + 1;
         
-        if(rand <= userInterestPercentage){
+        if(rand <= interestPercentage){
             // Generate a post based on user's interests
             generateInterestsPost();
-        } else if(rand <= userTrendingPercentage + userInterestPercentage){
+        } else if(rand <= userTrendingPercentage + interestPercentage){
             // Generate a Trending post
             generateTrendingPost();
-        } else if(rand <= userNewPercentage + userTrendingPercentage + userInterestPercentage){
+        } else if(rand <= userNewPercentage + userTrendingPercentage + interestPercentage){
             // Generate a New post
             generateNewPost();
         } else{ 
@@ -88,160 +88,156 @@ function generatePosts(){
 
 function generateInterestsPost(){
     console.log(req.user);
-    // DISCLAIMER: Category is being used to test instead of Post due to current inability to sign in and add new posts
-    // HOW TO CHANGE TO POST:
-    // - Category.find() to Post.find()
-    // - post.create_date to post.post_date
-    if(trendingPosts.length/postGenerationRequests - trendingGenerationCalls <= 10){
-        // Find all posts
-        Category.find({}, function(err, posts){
-            posts.forEach(function(post){
-                // Find all posts that are less than 2 weeks old
-                if((Date.now()-Date.parse(post.create_date))/(1000*3600*24) < 14){
-                    var userViewedPost = false;
-                    user.viewedPosts.forEach(function(viewedPost){
-                        if(viewedPost == post){
-                            userViewedPost = true;
-                        }
-                    });
-                    if(!userViewedPost){
-                        interestPostsRaw.push(post);
-                    }
-                }
-            });
-            
-            var postAlreadyChosen = false;
-
-            interestPostsRaw.forEach(function(post){
-                // Checks if the post has already been chosen as a trending, popular or new post
-                trendingPosts.forEach(function(trendingPost){
-                    if(post != trendingPost){
-                        newPosts.forEach(function(newPost){
-                            if(post != newPost){
-                                popularPosts.forEach(function(popularPost){
-                                    if(post == popularPost){
-                                        postAlreadyChosen = true;
-                                    }
-                                });
-                            } else{
-                                postAlreadyChosen = true;
+    // Find the user
+    User.findOne({username:req.user.username}, function(user){
+        if(trendingPosts.length/postGenerationRequests - trendingGenerationCalls <= 10){
+            // Find all posts
+            Post.find({}, function(err, posts){
+                posts.forEach(function(post){
+                    // Find all posts that are less than 2 weeks old
+                    if((Date.now()-Date.parse(post.post_date))/(1000*3600*24) < 14){
+                        var userViewedPost = false;
+                        // Check if the post has already been seen by the user
+                        user.viewedPosts.forEach(function(viewedPost){
+                            if(viewedPost == post){
+                                userViewedPost = true;
                             }
                         });
-                    } else{
-                        postAlreadyChosen = true;
+                        if(!userViewedPost){
+                            interestPostsRaw.push(post);
+                        }
                     }
                 });
-
-                if(!postAlreadyChosen){
-                    // Check if there are empty spaces in array that need to be filled
-                    if(interestPosts.length/postGenerationRequests < 20){
-                        interestPosts.push(post);
-                    } else{
-                        interestPosts.forEach(function(existingPost){
+                
+                var postAlreadyChosen = false;
+    
+                interestPostsRaw.forEach(function(post){
+                    // Checks if the post has already been chosen as a trending, popular or new post
+                    trendingPosts.forEach(function(trendingPost){
+                        if(post != trendingPost){
+                            newPosts.forEach(function(newPost){
+                                if(post != newPost){
+                                    popularPosts.forEach(function(popularPost){
+                                        if(post == popularPost){
+                                            postAlreadyChosen = true;
+                                        }
+                                    });
+                                } else{
+                                    postAlreadyChosen = true;
+                                }
+                            });
+                        } else{
+                            postAlreadyChosen = true;
+                        }
+                    });
+    
+                    if(!postAlreadyChosen){
+                        // Check if there are empty spaces in array that need to be filled
+                        if(interestPosts.length/postGenerationRequests < 20){
+                            interestPosts.push(post);
+                        } else{
+                            interestPosts.forEach(function(existingPost){
+                                // Find the interestValue of the post
+                                var interestValue = 0;
+                                user.connected_users.following.forEach(function(following){
+                                    if(following == existingPost.author){
+                                        interestValue = interestValue + 70;
+                                    }
+                                });
+    
+                                user.subscriptions.categories.forEach(function(category){
+                                    if(category == existingPost.category){
+                                        interestValue = interestValue + 20;
+                                    }
+                                });
+    
+                                user.subscriptions.threads.forEach(function(thread){
+                                    if(thread == existingPost.thread){
+                                        interestValue = interestValue + 10;
+                                    }
+                                });
+                                // Get value of post that is in interestPost array
+                                var postValue = ((existingPost.favs*100) + existingPost.likes + existingPost.comments.length) * (interestValue/100);
+                                interestPostsValue.push(postValue);
+                            });
+    
                             // Find the interestValue of the post
                             var interestValue = 0;
                             user.connected_users.following.forEach(function(following){
-                                if(following == existingPost.author){
+                                if(following == post.author){
                                     interestValue = interestValue + 70;
                                 }
                             });
-
+    
                             user.subscriptions.categories.forEach(function(category){
-                                if(category == existingPost.category){
+                                if(category == post.category){
                                     interestValue = interestValue + 20;
                                 }
                             });
-
+    
                             user.subscriptions.threads.forEach(function(thread){
-                                if(thread == existingPost.thread){
+                                if(thread == post.thread){
                                     interestValue = interestValue + 10;
                                 }
-                            });
-                            // Get value of post that is in interestPost array
-                            var postValue = ((existingPost.favs*100) + existingPost.likes + existingPost.comments.length) * (interestValue/100);
-                            interestPostsValue.push(postValue);
-                        });
-
-                        // Find the interestValue of the post
-                        var interestValue = 0;
-                        user.connected_users.following.forEach(function(following){
-                            if(following == post.author){
-                                interestValue = interestValue + 70;
-                            }
-                        });
-
-                        user.subscriptions.categories.forEach(function(category){
-                            if(category == post.category){
-                                interestValue = interestValue + 20;
-                            }
-                        });
-
-                        user.subscriptions.threads.forEach(function(thread){
-                            if(thread == post.thread){
-                                interestValue = interestValue + 10;
-                            }
-                        }); 
-
-                        // Find the post value
-                        var postValue = ((post.favs*100) + post.likes + post.comments.length) * (interestValue/100);
-                        var interestPostToBeReplaced = null;
-                        var i = 0;
-
-                        interestPosts.forEach(function(existingPost){
-                            // Checks if the current post has a greater value than a post in interestPosts
-                            if(postValue > interestPostsValue[i]){
-                                // Checks if it is on the last post in the interestPost array
-                                if(i+1 < interestPosts.length){
-                                    // If there is no other post that has a lesser value
-                                    if(interestPostToBeReplaced == null){
-                                        interestPostToBeReplaced = i;
-                                    } else {
-                                        // Checks if the existingPost has a lesser value than that of the one that was going to be replaced
-                                        if(interestPostsValue[i] < interestPostToBeReplaced){
+                            }); 
+    
+                            // Find the post value
+                            var postValue = ((post.favs*100) + post.likes + post.comments.length) * (interestValue/100);
+                            var interestPostToBeReplaced = null;
+                            var i = 0;
+    
+                            interestPosts.forEach(function(existingPost){
+                                // Checks if the current post has a greater value than a post in interestPosts
+                                if(postValue > interestPostsValue[i]){
+                                    // Checks if it is on the last post in the interestPost array
+                                    if(i+1 < interestPosts.length){
+                                        // If there is no other post that has a lesser value
+                                        if(interestPostToBeReplaced == null){
                                             interestPostToBeReplaced = i;
+                                        } else {
+                                            // Checks if the existingPost has a lesser value than that of the one that was going to be replaced
+                                            if(interestPostsValue[i] < interestPostToBeReplaced){
+                                                interestPostToBeReplaced = i;
+                                            }
+                                        }
+                                    } else{
+                                        // Replaces a existingPost with the current post
+                                        if(interestPostToBeReplaced == null){
+                                            interestPosts[interestPostToBeReplaced] = post;
+                                        } else {
+                                            if(interestPostsValue[i] < interestPostToBeReplaced){
+                                                interestPosts[i] = post;
+                                            }
                                         }
                                     }
-                                } else{
-                                    // Replaces a existingPost with the current post
-                                    if(interestPostToBeReplaced == null){
-                                        interestPosts[interestPostToBeReplaced] = post;
-                                    } else {
-                                        if(interestPostsValue[i] < interestPostToBeReplaced){
-                                            interestPosts[i] = post;
-                                        }
-                                    }
-                                }
-                            } 
-                            i++;
-                        });
+                                } 
+                                i++;
+                            });
+                        }
                     }
-                }
+                });
+                // Rearrange interestPosts in order of value
+                interestPosts.sort(function(a, b){return b-a});
+                // Variable Resets
+                interestPostsValue = [];
+                interestPostsRaw = [];
             });
-            // Rearrange interestPosts in order of value
-            interestPosts.sort(function(a, b){return b-a});
-            // Variable Resets
-            interestPostsValue = [];
-            interestPostsRaw = [];
-        });
-    } else {
-        // Push the interesting post to clientPosts array
-        clientPosts.push(interestPosts[interestGenerationCalls]);
-    }
-    interestGenerationCalls++;
+        } else {
+            // Push the interesting post to clientPosts array
+            clientPosts.push(interestPosts[interestGenerationCalls]);
+        }
+        interestGenerationCalls++;
+    });
 }
 
 function generateTrendingPost(){
     console.log('Trending');
-    // DISCLAIMER: Category is being used to test instead of Post due to current inability to sign in and add new posts
-    // HOW TO CHANGE TO POST:
-    // - Category.find() to Post.find()
-    // - post.create_date to post.post_date
     if(trendingPosts.length/postGenerationRequests - trendingGenerationCalls <= 10){
         // Find all posts
-        Category.find({}, function(err, posts){
+        Post.find({}, function(err, posts){
             posts.forEach(function(post){
                 // Find all posts that are less than 7 days old
-                if((Date.now()-Date.parse(post.create_date))/(1000*3600*24) < 7){
+                if((Date.now()-Date.parse(post.post_date))/(1000*3600*24) < 7){
                     trendingPostsRaw.push(post);
                 }
             });
@@ -275,12 +271,12 @@ function generateTrendingPost(){
                     } else{
                         trendingPosts.forEach(function(existingPost){
                             // Get value of post that is in trendingPost array
-                            var postValue = ((existingPost.favs*100) + existingPost.likes + existingPost.comments.length) / Date.now() - Date.parse(existingPost.create_date);
+                            var postValue = ((existingPost.favs*100) + existingPost.likes + existingPost.comments.length) / Date.now() - Date.parse(existingPost.post_date);
                             trendingPostsValue.push(postValue);
                         });
 
                         // Get value of post that is being checked
-                        var postValue = ((post.favs*100) + post.likes + post.comments.length) / Date.now() - Date.parse(post.create_date);
+                        var postValue = ((post.favs*100) + post.likes + post.comments.length) / Date.now() - Date.parse(post.post_date);
                         var trendingPostToBeReplaced = null;
                         var i = 0;
 
@@ -329,16 +325,12 @@ function generateTrendingPost(){
 
 function generateNewPost(){
     console.log('New');
-    // DISCLAIMER: Category is being used to test instead of Post due to current inability to sign in and add new posts
-    // HOW TO CHANGE TO POST:
-    // - Category.find() to Post.find()
-    // - post.create_date to post.post_date
     if(newPosts.length/postGenerationRequests - newGenerationCalls <= 8){
         // Find all posts
-        Category.find({}, function(err, posts){
+        Post.find({}, function(err, posts){
             posts.forEach(function(post){
                 // Find all posts that are less than 1 day old
-                if((Date.now()-Date.parse(post.create_date))/(1000*3600*24) < 1){
+                if((Date.now()-Date.parse(post.post_date))/(1000*3600*24) < 1){
                     newPostsRaw.push(post);
                 }
             });
@@ -426,16 +418,12 @@ function generateNewPost(){
 
 function generatePopularPost(){
     console.log('Popular');
-    // DISCLAIMER: Category is being used to test instead of Post due to current inability to sign in and add new posts
-    // HOW TO CHANGE TO POST:
-    // - Category.find() to Post.find()
-    // - post.create_date to post.post_date
     if(popularPosts.length/postGenerationRequests - popularGenerationCalls <= 5){
         // Find all posts
-        Category.find({}, function(err, posts){
+        Post.find({}, function(err, posts){
             posts.forEach(function(post){
                 // Find all posts that are within the popularPostTimeframe
-                if((Date.now()-Date.parse(post.create_date))/(1000*3600*24) < popularPostTimeframe){
+                if((Date.now()-Date.parse(post.post_date))/(1000*3600*24) < popularPostTimeframe){
                     popularPostsRaw.push(post);
                 }
             });
