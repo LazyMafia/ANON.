@@ -12,7 +12,7 @@ var postSchema = mongoose.Schema({
     favs: Number,
     score: Number,
     thread: String,
-    Category: String,
+    category: String,
     comment:[{
         body: String,
         comment_date: Date,
