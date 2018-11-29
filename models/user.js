@@ -99,7 +99,7 @@ var userSchema = mongoose.Schema({
 		},
 		upload_date: Date,
 		text: String,
-		parent: tring,
+		parent: String,
 		upvotes: Number,
 		downvotes: Number,
 		favs: Number,
