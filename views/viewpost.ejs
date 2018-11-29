@@ -1,0 +1,69 @@
+<% include ../partials/header-top.ejs %>
+<title>Anon. - Overview</title>
+<% include ../partials/header-bottom.ejs %>
+
+<h1>Overview</h1>
+<% clientPosts.forEach(function(post){ %>
+  <center>
+    <div class="post-content">
+      <div class="main">    
+        <div class="card">
+          <div class="card-header">
+            <h2><%= post.title %>></h2>
+          </div>
+          <div class="card-body">
+            <p class="card-text"><%= post.body %></p>
+            <p class="date"><%= post.post_date %></p>
+            <ul class="meta">
+              <li>Posted by <a href="#"><%= post.author %></a></li>
+            </ul>
+            <a href="#" class="btn btn-primary">View Post</a>
+          </div>
+        </div>
+      </div>
+    </div>  
+  </center>  
+<% }) %>
+            
+
+            
+
+<!-- <center>
+<div class="post-content">
+<div class="main">    
+<div class="card">
+        <div class="card-header">
+          <h2>Post Title</h2>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">so ive got dis probelm</h5>
+          <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit proident...</p>
+          <p class="date">16 <span>Jul</span> 2019</p>
+                <ul class="meta">
+                    <li>Posted by <a href="#">DUMBASS</a></li>
+                    <li class="comments"><a href="#">View Comments</a></li>
+          <a href="#" class="btn btn-primary">View Post</a>
+        </div>
+      </div>
+    </div>
+</div>  
+</center>   -->
+                    <!--   
+                        <div class="pagination">
+                            <p class="prev"><a href="#">Older posts</a></p>
+                            <p class="next"><a href="#">Newer posts</a></p>
+                        </div>
+                        
+                    </div>
+                --> 
+
+		</div> <!-- .content-wrapper -->
+
+	</main> <!-- .cd-main-content -->
+
+<script src="js/sweetalert/dist/sweetwater.min.js"></script>
+<script src="js/jquery-2.1.4.js"></script>
+<script src="js/jquery.menu-aim.js"></script>
+<script src="js/main.js"></script> <!-- Resource jQuery -->
+</body>
+</html>

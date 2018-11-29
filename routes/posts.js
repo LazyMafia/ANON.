@@ -5,6 +5,8 @@ const router = express.Router();
 let User = require('../models/user');
 // Bring in Category Model
 let Category = require('../models/category');
+// Bring in Posts Model
+let Post = require('../models/post');
 
 router.get('/add', ensureAuthenticated, function(req, res){
 	res.render('addpost');
@@ -38,7 +40,24 @@ router.post('/add', ensureAuthenticated, function(req, res){
 				if(err){
 					console.log(err);
 				} else{
-					res.redirect('/');
+					// Add post to Posts Model
+					const post = new Post({
+						title: req.body.title,
+						body: req.body.body,
+						post_date: Date.now(),
+						author: req.user._id,
+						category: req.body.category,
+						thread: req.body.thread
+					});
+
+					post.save(function(err){
+						if(err){
+							console.log(err);
+						} else{
+							req.flash('success', 'Post has been added.');
+							res.redirect('/');
+						}
+					});
 				}
 			});
 			

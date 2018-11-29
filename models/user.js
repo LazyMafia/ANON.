@@ -99,7 +99,7 @@ var userSchema = mongoose.Schema({
 		},
 		upload_date: Date,
 		text: String,
-		parent: ObjectId,
+		parent: String,
 		upvotes: Number,
 		downvotes: Number,
 		favs: Number,
@@ -184,6 +184,15 @@ var userSchema = mongoose.Schema({
 			}
 		}]
 	},
+	subscriptions:[{
+		categories:[{
+			name: String
+		}],
+		threads:[{
+			name: String,
+			category: String
+		}]
+	}],
 	notifications:[{
 		text: String,
 		link: String,
@@ -191,6 +200,11 @@ var userSchema = mongoose.Schema({
 			data: Buffer,
 			contentType: String
 		}
+	}],
+	viewedPosts:[{
+		postType: String,
+		post_date: Date,
+		title: String
 	}]
 });
 
