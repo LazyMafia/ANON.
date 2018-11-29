@@ -745,8 +745,7 @@ Sidebar
 
 .create-post h2 {
   padding-top: 10px;
-  margin-left: 30px;
-  text-align: left;
+  text-align: center;
   font-size: 25px;
   color: #f37735;
 }
@@ -832,8 +831,7 @@ Sidebar
 
 .signupbox > #SignupHeader {
   color: #f37735;
-  margin-top: 18px;
-  padding: 0 0 28px;
+  margin-top: 38px;
   text-align: center;
   font-size: 34px;
 }
@@ -986,3 +984,15 @@ Sidebar
           font-size: 24px;
           text-align: center;
         }
+
+      .psForm {
+        text-align: center;
+        margin: 15px;
+      }
+
+      input[type=text] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        box-sizing: border-box;
+    }
