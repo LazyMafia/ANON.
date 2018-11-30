@@ -52,19 +52,23 @@
 					<a href="/">Overview</a>
 					
 					<ul>
-						<li><a href="#0">All Data</a></li>
-						<li><a href="#0">Category 1</a></li>
-						<li><a href="#0">Category 2</a></li>
+						<li><a href="/trending">Trending</a></li>
+						<li><a href="/popular">Popular</a></li>
+						<li><a href="/new">New</a></li>
 					</ul>
 				</li>
-				<li class="has-children notifications active">
-					<a href="#0">Notifications<!--<span class="count">3</span>--></a>
-					
-					<ul>
-						<li><a href="#0">All Notifications</a></li>
-						<li><a href="#0">Friends</a></li>
-						<li><a href="#0">Other</a></li>
-					</ul>
+				<li class="has-children notifications">
+					<% if(user){ %>
+						<a href="/notifications">Notifications<span class="count"><%= user.notfications.length %></span></a>
+
+						<ul>
+							<li><a href="#0">All Notifications</a></li>
+							<li><a href="#0">Friends</a></li>
+							<li><a href="#0">Other</a></li>
+						</ul>
+					<% } else { %>
+						<a href="/login">Notifications</a>
+					<% } %>
 				</li>
 
 				<li class="has-children comments">
