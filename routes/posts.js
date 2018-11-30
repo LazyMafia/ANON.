@@ -8,8 +8,8 @@ let Category = require('../models/category');
 // Bring in Posts Model
 let Post = require('../models/post');
 
-router.get('/add', ensureAuthenticated, function(req, res){
-	res.render('addpost');
+router.get('/add', function(req, res){
+	res.render('addpostnew');
 });
 
 // Post Process

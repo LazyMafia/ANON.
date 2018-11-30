@@ -13,9 +13,12 @@
 	<link rel="stylesheet" href="../css/style.css"> <!-- Resource style -->
 	<script src="../js/modernizr.js"></script> <!-- Modernizr -->
   	<!--Title-->
-    <title>Anon. - Welcome</title>
-    </head>
-<body>
+	<title>Anon. - Post</title>
+	<!--JS-->
+	<script src="../editor/ckeditor.js"></script>
+	<script defer src="https://use.fontawesome.com/releases/v5.5.0/js/all.js" integrity="sha384-GqVMZRt5Gn7tB9D9q7ONtcp4gtHIUEW/yG7h98J7IpE3kpi+srfFyyB/04OV6pG0" crossorigin="anonymous"></script>
+</head>
+<body onload="enableEditMode();">
 	<header class="cd-main-header">
 		<a href="#0" class="cd-logo"><img src="../img/cd-logo.svg" alt="Logo"></a>
 		
@@ -36,17 +39,16 @@
 					</a>
 
 					<ul>
-					<% if(user){ %>
-						<% if(user.username == 'admin'){ %>
-							<li><a href="/admin">Admin</a></li>
-						<% } %>
-						<li><a href="/settings">Settings</a></li>
-						<li><a href="/logout">Logout</a></li>
-					<% } else { %>
-						<li><a href="/login">Login</a></li>
-						<li><a href="/register">Sign Up</a></li>
-					<% } %>
-				
+                        <% if(user){ %>
+                            <% if(user.username == 'admin'){ %>
+                                <li><a href="/admin">Admin</a></li>
+                            <% } %>
+                            <li><a href="/settings">Settings</a></li>
+                            <li><a href="/logout">Logout</a></li>
+                        <% } else { %>
+                            <li><a href="/login">Login</a></li>
+                            <li><a href="/register">Sign Up</a></li>
+                        <% } %>
 					</ul>
 				</li>
 			</ul>
@@ -126,3 +128,29 @@
 		</nav>
 
 		<div class="content-wrapper">
+			<h1>ANON.</h1>
+			<div class="create-post">
+				<h2>Post Something!</h2>
+			</div>	
+			
+			<div class="container">
+
+			<form action="/posts/add" method="POST" class="psForm">
+			<input type="text" name="title" placeholder="Title" class="PS-inputs">
+			<textarea name="body" placeholder="ENTER TEXT"></textarea>
+			<script>
+				CKEDITOR.replace( 'body' );
+			</script>
+			</form>
+
+			</div>
+		</div> <!-- .content-wrapper -->
+
+	</main> <!-- .cd-main-content -->
+
+<script src="js/sweetalert/dist/sweetwater.min.js"></script>
+<script src="js/jquery-2.1.4.js"></script>
+<script src="js/jquery.menu-aim.js"></script>
+<script src="js/main.js"></script> <!-- Resource jQuery -->
+</body>
+</html>
