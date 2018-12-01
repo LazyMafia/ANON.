@@ -36,13 +36,13 @@ router.get('/', function(req, res){
     if(req.user != null){
         postGenerationRequests++;
         generatePostsUser();
-        res.render('viewpost', {
+        res.render('overview', {
             clientPosts:clientPosts
         });
     } else if(welcomeContinue){
         postGenerationRequests++;
         generatePosts();
-        res.render('viewpost', {
+        res.render('overview', {
             clientPosts:clientPosts
         });
     } else {

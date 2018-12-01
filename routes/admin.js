@@ -18,7 +18,7 @@ const storage = multer.diskStorage({
 
 const fileFilter = (req, file, cb) => {
 	// Reject a File
-	if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
+	if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/svg'){
 		cb(null, true);
 	} else {
 		req.fileValidationError = 'Invalid image format.';
@@ -74,20 +74,21 @@ router.post('/add', upload.single('categoryImage'), function(req, res){
 			// No Errors
 			} else {
 				// Resize Image
-				jimp.read('./public/uploads/' + imageName, function(err, img){
-					if(err){
-						console.log(err)
-					}
-					img.resize(250, 250).write('./public/uploads/' + imageName.slice(0, imageName.lastIndexOf('.')) + '.png', function(){
-						fs.unlinkSync('./public/uploads/' + imageName);
-					});
-				});
+				// jimp.read('./public/uploads/' + imageName, function(err, img){
+				// 	if(err){
+				// 		console.log(err)
+				// 	}
+				// 	img.resize(250, 250).write('./public/uploads/' + imageName.slice(0, imageName.lastIndexOf('.')) + '.png', function(){
+				// 		fs.unlinkSync('./public/uploads/' + imageName);
+				// 	});
+				// });
 
 				const category = new Category({
 					name: req.body.name.toLowerCase(),
 					about: req.body.about,
 					create_date: Date.now(),
-					img: 'public\\uploads\\' + imageName.slice(0, imageName.lastIndexOf('.')) + '.png'
+					img: './public/uploads/' + imageName
+					//'public\\uploads\\' + imageName.slice(0, imageName.lastIndexOf('.')) + '.png'
 				});
 
 				category.save(function(err){
