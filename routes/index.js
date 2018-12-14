@@ -24,6 +24,9 @@ var newPostsValue = [];
 var popularPostsRaw = [];
 var popularPosts = [];
 var popularPostsValue = [];
+var userObj;
+var callbackNum = 0;
+var generateMore = false;
 
 // Bring in User Model
 let User = require('../models/user');
@@ -33,63 +36,92 @@ let Category = require('../models/category');
 let Post = require('../models/post');
 
 router.get('/', function(req, res){
+    userObj = req.user;
     if(req.user != null){
-        postGenerationRequests++;
-        generatePostsUser();
-        res.render('overview', {
-            clientPosts:clientPosts
-        });
+        if(clientPosts.length < 1 || generateMore){
+            postGenerationRequests++;
+            generatePostsUser(() => {
+                res.render('overview', {
+                    clientPosts:clientPosts
+                });
+            });
+        } else {
+            res.render('overview', {
+                clientPosts:clientPosts
+            });
+        }
     } else if(welcomeContinue){
-        postGenerationRequests++;
-        generatePosts();
-        res.render('overview', {
-            clientPosts:clientPosts
-        });
+        if(clientPosts.length < 1 || generateMore){
+            postGenerationRequests++;
+            generatePosts(() => {
+                res.render('overview', {
+                    clientPosts:clientPosts
+                });
+            });
+        } else {
+            res.render('overview', {
+                clientPosts:clientPosts
+            });
+        }
     } else {
         res.render('welcome');
     }
 });
 
-function generatePostsUser(){
+function generatePostsUser(cb){
     for(var i = 0; i < 15; i++){
         var rand = Math.floor(Math.random()*100) + 1;
         
         if(rand <= interestPercentage){
             // Generate a post based on user's interests
-            generateInterestsPost();
+            generateInterestsPost(() => callbackNum++);
         } else if(rand <= userTrendingPercentage + interestPercentage){
             // Generate a Trending post
-            generateTrendingPost();
+            generateTrendingPost(() => callbackNum++);
         } else if(rand <= userNewPercentage + userTrendingPercentage + interestPercentage){
             // Generate a New post
-            generateNewPost();
+            generateNewPost(() => callbackNum++);
         } else{ 
             // Generate a Popular Post
-            generatePopularPost();
+            generatePopularPost(() => callbackNum++);
         }
     }
+    var interval = setInterval(function(){
+        if(callbackNum >= 15){
+            cb();
+            callbackNum = 0;
+            clearInterval(interval);
+        }
+    }, 100);
 }
 
-function generatePosts(){
+function generatePosts(cb){
     for(var i = 0; i < 15; i++){
         var rand = Math.floor(Math.random()*100) + 1;
         if(rand <= trendingPercentage){
             // Generate a Trending post
-            generateTrendingPost();
+            generateTrendingPost(() => callbackNum++);
         } else if(rand <= newPercentage + trendingPercentage){
             // Generate a New post
-            generateNewPost();
+            generateNewPost(() => callbackNum++);
         } else{
             // Generate a Popular post
-            generatePopularPost();
+            generatePopularPost(() => callbackNum++);
         }
     }
+    var interval = setInterval(function(){
+        if(callbackNum >= 15){
+            cb();
+            callbackNum = 0;
+            clearInterval(interval);
+        }
+    }, 100);
 }
 
-function generateInterestsPost(){
-    console.log(req.user);
+function generateInterestsPost(cb){
+    console.log(userObj);
     // Find the user
-    User.findOne({username:req.user.username}, function(user){
+    User.findOne({username:userObj.username}, function(user){
         if(trendingPosts.length/postGenerationRequests - trendingGenerationCalls <= 10){
             // Find all posts
             Post.find({}, function(err, posts){
@@ -221,16 +253,23 @@ function generateInterestsPost(){
                 // Variable Resets
                 interestPostsValue = [];
                 interestPostsRaw = [];
+                // Push the interesting post to clientPosts array
+                clientPosts.push(interestPosts[interestGenerationCalls]);
+                // Callback
+                interestGenerationCalls++;
+                cb();
             });
         } else {
             // Push the interesting post to clientPosts array
             clientPosts.push(interestPosts[interestGenerationCalls]);
+            // Callback
+            interestGenerationCalls++;
+            cb();
         }
-        interestGenerationCalls++;
     });
 }
 
-function generateTrendingPost(){
+function generateTrendingPost(cb){
     console.log('Trending');
     if(trendingPosts.length/postGenerationRequests - trendingGenerationCalls <= 10){
         // Find all posts
@@ -243,7 +282,6 @@ function generateTrendingPost(){
             });
             
             var postAlreadyChosen = false;
-
             trendingPostsRaw.forEach(function(post){
                 // Checks if the post has already been chosen as a interesting, new or popular post
                 interestPosts.forEach(function(interestPost){
@@ -315,15 +353,22 @@ function generateTrendingPost(){
             // Variable Resets
             trendingPostsValue = [];
             trendingPostsRaw = [];
+            // Push the trending post to clientPosts array
+            clientPosts.push(trendingPosts[trendingGenerationCalls]);
+            // Callback
+            trendingGenerationCalls++;
+            cb();
         });
     } else {
         // Push the trending post to clientPosts array
         clientPosts.push(trendingPosts[trendingGenerationCalls]);
+        // Callback
+        trendingGenerationCalls++;
+        cb();
     }
-    trendingGenerationCalls++;
 }
 
-function generateNewPost(){
+function generateNewPost(cb){
     console.log('New');
     if(newPosts.length/postGenerationRequests - newGenerationCalls <= 8){
         // Find all posts
@@ -334,7 +379,6 @@ function generateNewPost(){
                     newPostsRaw.push(post);
                 }
             });
-            
             var postAlreadyChosen = false;
 
             newPostsRaw.forEach(function(post){
@@ -408,15 +452,22 @@ function generateNewPost(){
             // Variable Resets
             newPostsValue = [];
             newPostsRaw = [];
+            // Push the new post to clientPosts array
+            clientPosts.push(newPosts[newGenerationCalls]);
+            // Callback
+            newGenerationCalls++;
+            cb();
         });
     } else {
         // Push the new post to clientPosts array
         clientPosts.push(newPosts[newGenerationCalls]);
+        // Callback
+        newGenerationCalls++;
+        cb();
     }
-    newGenerationCalls++;
 }
 
-function generatePopularPost(){
+function generatePopularPost(cb){
     console.log('Popular');
     if(popularPosts.length/postGenerationRequests - popularGenerationCalls <= 5){
         // Find all posts
@@ -501,12 +552,19 @@ function generatePopularPost(){
             // Variable Resets
             popularPostsValue = [];
             popularPostsRaw = [];
+            // Push the popular post to clientPosts array
+            clientPosts.push(popularPosts[popularGenerationCalls]);
+            // Callback
+            popularGenerationCalls++;
+            cb();
         });
     } else {
         // Push the popular post to clientPosts array
         clientPosts.push(popularPosts[popularGenerationCalls]);
+        // Callback
+        popularGenerationCalls++;
+        cb();
     }
-    popularGenerationCalls++;
 }
 
 module.exports = router;

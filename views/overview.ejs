@@ -2,6 +2,10 @@
 <title>Anon. - Overview</title>
 <% include ../partials/header-bottom.ejs %>
 
+<% var dayOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"] %>
+<% var month = ["January","February","March","April","May","June","July","August","September","October","November","December"] %>
+<% var dayEndings = ["th","st","nd","rd","th","th","th","th","th","th"] %>
+
 <h1>Overview</h1>
 <% clientPosts.forEach(function(post){ %>
   <center>
@@ -9,15 +13,62 @@
       <div class="main">    
         <div class="card">
           <div class="card-header">
-            <h2><%= post.title %>></h2>
+            <h2><%= post.title %></h2>
           </div>
           <div class="card-body">
             <p class="card-text"><%= post.body %></p>
-            <p class="date"><%= post.post_date %></p>
+            <p class="date">
+              <% var postDate = (Date.now()-Date.parse(post.post_date))/(1000*3600) %>
+              <% var postDayOfMonth = post.post_date.getDate() %>
+
+              <!-- Posts Within 24hrs -->
+              <% if(postDate < 24){ %>
+                <!-- Posts Within the Hour -->
+                <% if(postDate < 1){ %>
+                  <!-- Posts Within the Minute -->
+                  <% if(Math.round(60/(1/postDate)) <= 1){ %>
+                    Just Posted
+                  <% } else{ %>
+                    Posted <%= Math.round(60/(1/postDate)) %> Minutes Ago
+                  <% } %>
+                <% } else{ %>
+                  <% if(Math.round(postDate) >= 2){ %>
+                    Posted <%= Math.round(postDate) %> Hours Ago
+                  <!-- Posts from an Hour Ago -->
+                  <% } else{ %>
+                    Posted An Hour Ago
+                  <% } %>
+                <% } %>
+              <!-- Posts more than a Day Old-->
+              <% } else{ %>
+                <!-- Posts from Yesterday -->
+                <% if(post.post_date.getDay() + 1 == now.getDay() || post.post_date.getDay() - 6 == now.getDay()){ %>
+                  Yesterday
+                <!-- Posts Within a Week -->
+                <% } else if(now.getDate() - postDayOfMonth <= 7){ %>
+                  <%= dayofWeek[post.post_date.getDay()] %> the <%= postDayOfMonth %><%= dayEndings[postDayOfMonth.slice(-1)] %>
+                <!-- Posts Within the Same Year -->
+                <% } else if(now.getYear() == post.post_date.getYear()){ %>
+                  <%= months[post.post_date.getMonth()] %> <%= postDayOfMonth %><%= dayEndings[postDayOfMonth.slice(-1)] %>
+                <% } else{ %>
+                  <!-- Posts Within 3 Months -->
+                  <% if(postDate/(24*30) <= 3){ %>
+                    <%= months[post.post_date.getMonth()] %> <%= postDayOfMonth %><%= dayEndings[postDayOfMonth.slice(-1)] %>, <%= post.post_date.getYear() %>
+                  <!-- Posts in Another Year -->
+                  <% } else{ %>
+                    <%= months[post.post_date.getMonth()] %> <%= post.post_date.getYear() %>
+                  <% } %>
+                <% } %>
+              <% } %>
+            </p>
             <ul class="meta">
-              <li>Posted by <a href="#"><%= post.author %></a></li>
+              <% if(post.author == "Anonymous"){ %>
+                <li>Posted by Anonymous</li>
+              <% } else{ %> 
+                <li>Posted by <a href="/users/view/<%= post.author %>"><%= post.author %></a></li>
+              <% } %>
             </ul>
-            <a href="/" class="btn btn-primary">View Post</a>
+            <a href="/posts/view/<%= post._id %>" class="btn btn-primary">View Post</a>
           </div>
         </div>
       </div>

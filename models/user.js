@@ -120,26 +120,26 @@ var userSchema = mongoose.Schema({
 		},
 		theme:{
 			type: String
+		}
+	},
+	notifications:{
+		email:{
+			replies: Boolean,
+			follow: Boolean,
+			upvotes: Boolean,
+			downvotes: Boolean,
+			favs: Boolean,
+			friend_request: Boolean,
+			friend_accept: Boolean
 		},
-		notifications:{
-			email:{
-				replies: Boolean,
-				follow: Boolean,
-				upvotes: Boolean,
-				downvotes: Boolean,
-				favs: Boolean,
-				friend_request: Boolean,
-				friend_accept: Boolean
-			},
-			web:{
-				replies: Boolean,
-				follow: Boolean,
-				friend_request: Boolean,
-				friend_accept: Boolean,
-				upvotes: Boolean,
-				downvotes: Boolean,
-				favs: Boolean
-			}
+		web:{
+			replies: Boolean,
+			follow: Boolean,
+			friend_request: Boolean,
+			friend_accept: Boolean,
+			upvotes: Boolean,
+			downvotes: Boolean,
+			favs: Boolean
 		}
 	},
 	connected_users:{

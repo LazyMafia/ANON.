@@ -27,7 +27,7 @@ var categorySchema = mongoose.Schema({
 			upvotes: Number,
 			downvotes: Number,
 			favs: Number,
-			comment:[{
+			comments:[{
 				body: String,
 				comment_date: Date,
 				reports: Number,
