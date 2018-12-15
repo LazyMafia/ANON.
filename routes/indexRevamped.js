@@ -1,12 +1,27 @@
 const express = require('express');
 const router = express.Router();
-var postGenerationRequests = clientGenerationCalls = extraGenerationCalls = popularGenerationCalls = interestGenerationCalls = trendingGenerationCalls = newGenerationCalls = 0;
-var trendingPercentage = 65, interestPercentage = 45, userTrendingPercentage = 38, newPercentage = 30, userNewPercentage = 15; 
-var clientPosts = clientPostsRaw = extraPosts = popularPosts = interestPosts = trendingPosts = newPosts = [];
 var popularPostTimeframe = 90;
+var postGenerationRequests = 0;
+var interestGenerationCalls = 0;
+var trendingGenerationCalls = 0;
+var newGenerationCalls = 0;
+var popularGenerationCalls = 0;
+var clientGenerationCalls = 0;
+var extraGenerationCalls = 0;
+var interestPercentage = 45;
+var userTrendingPercentage = 38;
+var trendingPercentage = 65;
+var userNewPercentage = 15;
+var newPercentage = 30;
+var clientPosts = [];
+var interestPosts = [];
+var trendingPosts = [];
+var newPosts = [];
+var popularPosts = [];
+var clientPostsRaw = [];
+var userObj;
 var callbackNum = 0;
 var generateMore = false;
-var userObj;
 
 // Bring in User Model
 let User = require('../models/user');
@@ -156,11 +171,9 @@ function generatePosts(cb){
 				// Sort Arrays
 				extraPosts.sort((a,b) => (a.score > b.score) ? 1 : ((b.score > a.score) ? -1 : 0));
 				popularPosts.sort((a,b) => (a.score > b.score) ? 1 : ((b.score > a.score) ? -1 : 0));
+				interestPosts.sort((a,b) => (getInterestValue(a) > getInterestValue(b)) ? 1 : ((getInterestValue(b) > getInterestValue(a)) ? -1 : 0));
 				trendingPosts.sort((a,b) => (a.score/(Date.now() - Date.parse(a.post_date)) > b.score/(Date.now() - Date.parse(b.post_date))) ? 1 : ((b.score/(Date.now() - Date.parse(b.post_date)) > a.score/(Date.now() - Date.parse(a.post_date))) ? -1 : 0));
 				newPosts.sort((a,b) => (a.score > b.score) ? 1 : ((b.score > a.score) ? -1 : 0));
-				if(userObj){
-					interestPosts.sort((a,b) => (getInterestValue(a) > getInterestValue(b)) ? 1 : ((getInterestValue(b) > getInterestValue(a)) ? -1 : 0));
-				}
 
 				// Generate 30 new clientPosts
 				for(var i = 0; i < 30; i++){
