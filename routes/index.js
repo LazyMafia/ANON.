@@ -1,11 +1,28 @@
 const express = require('express');
 const router = express.Router();
-var postGenerationRequests = clientGenerationCalls = extraGenerationCalls = popularGenerationCalls = interestGenerationCalls = trendingGenerationCalls = newGenerationCalls = 0;
-var trendingPercentage = 65, interestPercentage = 45, userTrendingPercentage = 38, newPercentage = 30, userNewPercentage = 15; 
-var clientPosts = clientPostsRaw = extraPosts = popularPosts = interestPosts = trendingPosts = newPosts = [];
+var postGenerationRequests = 0;
+var clientGenerationCalls = 0; 
+var extraGenerationCalls = 0;
+var popularGenerationCalls = 0;
+var interestGenerationCalls = 0;
+var trendingGenerationCalls = 0;
+var newGenerationCalls = 0;
+var clientPosts = [];
+var clientPostsRaw = [];
+var extraPosts = [];
+var popularPosts = [];
+var interestPosts = [];
+var trendingPosts = [];
+var newPosts = [];
+var trendingPercentage = 65;
+var interestPercentage = 45;
+var userTrendingPercentage = 38;
+var newPercentage = 30;
+var userNewPercentage = 15; 
 var popularPostTimeframe = 90;
 var callbackNum = 0;
 var generateMore = false;
+var empty = false;
 var userObj;
 
 // Bring in User Model
@@ -15,17 +32,43 @@ let Category = require('../models/category');
 // Bring in Post Model
 let Post = require('../models/post');
 
+router.get('/ajax/7h2p8HF0a3', function(req, res){
+	if(empty){
+		console.log("No more");
+	} else{
+		postGenerationRequests++;
+		generatePosts(() => {
+			res.send(clientPosts);
+		});
+	}
+});
+
 router.get('/', function(req, res){
     userObj = req.user;
     if(req.user || welcomeContinue){
-	    if(clientPosts.length < 1 || generateMore){
+	    if(clientPosts.length < 1 && !empty){
 	    	// Get new clientPosts
 	        postGenerationRequests++;
 	        generatePosts(() => {
+	        	console.log(trendingPosts.length + " -> " + trendingGenerationCalls);
+	        	console.log(newPosts.length + " -> " + newGenerationCalls);
+	        	console.log(interestPosts.length + " -> " + interestGenerationCalls);
+	        	console.log(popularPosts.length + " -> " + popularGenerationCalls);
 	            res.render('overview', {
 	                clientPosts:clientPosts
 	            });
 	        });
+	    } else if(req.query.ajax == "true"){
+	    	if(!empty){
+	    		console.log("Generated New");
+	    		console.log(empty);
+	    		allocateClientPosts(() => {
+	    			res.send(clientPosts);
+	    		});
+	    	} else{
+	    		console.log("Empty");
+	    		res.send(0);
+	    	}
 	    } else {
 	    	// Re-use the clientPosts array
 	        res.render('overview', {
@@ -43,7 +86,7 @@ function generatePosts(cb){
 	} else{
 		Post.find({}, function(err, posts){
 			if(trendingPosts.length > 0){
-				while(clientPostsRaw.length - postGenerationRequests*10 < 0 && extraPosts.length - extraGenerationCalls > 0){
+				while(clientPostsRaw.length - postGenerationRequests*10 < 0 && extraPosts[extraGenerationCalls]){
 					clientPostsRaw.push(extraPosts[extraGenerationCalls]);
 					extraGenerationCalls++;
 				}
@@ -168,20 +211,91 @@ function generatePosts(cb){
 
 					if(userObj && rand <= interestPercentage){
 						// Generate a post based on user's interests
-						clientPostsRaw.push(interestPosts[interestGenerationCalls]);
-						interestGenerationCalls++;
+						if(interestPosts[interestGenerationCalls]){
+							clientPostsRaw.push(interestPosts[interestGenerationCalls]);
+							interestGenerationCalls++;
+						} else if(trendingPosts[trendingGenerationCalls]){
+							clientPostsRaw.push(trendingPosts[trendingGenerationCalls]);
+							trendingGenerationCalls++;
+						} else if(newPosts[newGenerationCalls]){
+							clientPostsRaw.push(newPosts[newGenerationCalls]);
+							newGenerationCalls++;
+						} else if(popularPosts[popularGenerationCalls]){
+							clientPostsRaw.push(popularPosts[popularGenerationCalls]);
+							popularGenerationCalls++;
+						} else if(extraPosts[extraGenerationCalls]){
+							clientPostsRaw.push(extraPosts[extraGenerationCalls]);
+							extraGenerationCalls++;
+						} else{
+							allocateClientPosts(() => cb());
+							break;
+						}
 					} else if(userObj && rand <= interestPercentage + userTrendingPercentage || rand <= trendingPercentage){
 						// Generate a trending post
-						clientPostsRaw.push(trendingPosts[trendingGenerationCalls]);
-						trendingGenerationCalls++;
+						if(trendingPosts[trendingGenerationCalls]){
+							clientPostsRaw.push(trendingPosts[trendingGenerationCalls]);
+							trendingGenerationCalls++;
+						} else if(interestPosts[interestGenerationCalls]){
+							clientPostsRaw.push(interestPosts[interestGenerationCalls]);
+							interestGenerationCalls++;
+						} else if(newPosts[newGenerationCalls]){
+							clientPostsRaw.push(newPosts[newGenerationCalls]);
+							newGenerationCalls++;
+						} else if(popularPosts[popularGenerationCalls]){
+							clientPostsRaw.push(popularPosts[popularGenerationCalls]);
+							popularGenerationCalls++;
+						} else if(extraPosts[extraGenerationCalls]){
+							clientPostsRaw.push(extraPosts[extraGenerationCalls]);
+							extraGenerationCalls++;
+						} else{
+							allocateClientPosts(() => cb());
+							break;
+						}
 					} else if(userObj && rand <= interestPercentage + userTrendingPercentage + userNewPercentage || rand <= trendingPercentage + newPercentage){
 						// Generate a new post
-						clientPostsRaw.push(newPosts[newGenerationCalls]);
-						newGenerationCalls++;
+						if(newPosts[newGenerationCalls]){
+							clientPostsRaw.push(newPosts[newGenerationCalls]);
+							newGenerationCalls++;
+						} else if(interestPosts[interestGenerationCalls]){
+							clientPostsRaw.push(interestPosts[interestGenerationCalls]);
+							interestGenerationCalls++;
+						} else if(trendingPosts[trendingGenerationCalls]){
+							clientPostsRaw.push(trendingPosts[trendingGenerationCalls]);
+							trendingGenerationCalls++;
+						} else if(newPosts[newGenerationCalls]){
+							clientPostsRaw.push(newPosts[newGenerationCalls]);
+							newGenerationCalls++;
+						} else if(popularPosts[popularGenerationCalls]){
+							clientPostsRaw.push(popularPosts[popularGenerationCalls]);
+							popularGenerationCalls++;
+						} else if(extraPosts[extraGenerationCalls]){
+							clientPostsRaw.push(extraPosts[extraGenerationCalls]);
+							extraGenerationCalls++;
+						} else{
+							allocateClientPosts(() => cb());
+							break;
+						}
 					} else{
 						// Generate a popular post
-						clientPostsRaw.push(popularPosts[popularGenerationCalls]);
-						popularGenerationCalls++;
+						if(popularPosts[popularGenerationCalls]){
+							clientPostsRaw.push(popularPosts[popularGenerationCalls]);
+							popularGenerationCalls++;
+						} else if(interestPosts[interestGenerationCalls]){
+							clientPostsRaw.push(interestPosts[interestGenerationCalls]);
+							interestGenerationCalls++;
+						} else if(trendingPosts[trendingGenerationCalls]){
+							clientPostsRaw.push(trendingPosts[trendingGenerationCalls]);
+							trendingGenerationCalls++;
+						} else if(newPosts[newGenerationCalls]){
+							clientPostsRaw.push(newPosts[newGenerationCalls]);
+							newGenerationCalls++;
+						} else if(extraPosts[extraGenerationCalls]){
+							clientPostsRaw.push(extraPosts[extraGenerationCalls]);
+							extraGenerationCalls++;
+						} else{
+							allocateClientPosts(() => cb());
+							break;
+						}
 					}
 				}
 
@@ -321,8 +435,16 @@ function TNI(post){
 
 function allocateClientPosts(cb){
 	while(clientPosts.length < postGenerationRequests*10){
-		clientPosts.push(clientPostsRaw[clientGenerationCalls]);
-		clientGenerationCalls++;
+		console.log(clientPostsRaw.length);
+		console.log(clientGenerationCalls);
+		if(clientPostsRaw[clientGenerationCalls]){
+			clientPosts.push(clientPostsRaw[clientGenerationCalls]);
+			clientGenerationCalls++;
+		} else{
+			empty = true;
+			cb();
+			break;
+		}
 	}
 	cb();
 }
