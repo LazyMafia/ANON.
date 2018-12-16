@@ -22,11 +22,8 @@ var userNewPercentage = 15;
 var popularPostTimeframe = 90;
 var empty = false;
 var userObj;
+var currentPos;
 
-// Bring in User Model
-let User = require('../models/user');
-// Bring in Category Model
-let Category = require('../models/category');
 // Bring in Post Model
 let Post = require('../models/post');
 
@@ -45,21 +42,26 @@ router.get('/', function(req, res){
 	                clientPosts:clientPosts
 	            });
 	        });
-	    } else if(req.query.ajax == "true"){
+	    } else if(req.query.ajax == 'scroll'){
+			currentPos = req.query.scroll;
+			console.log(currentPos);
+			res.sendStatus(200);
+		} else if(req.query.ajax == 'get'){
 	    	if(!empty){
 				postGenerationRequests++;
 	    		allocateClientPosts(() => {
 	    			res.send(clientPosts.slice(-10));
 	    		});
 	    	} else{
-	    		console.log("Empty");
 	    		res.sendStatus(500);
 	    	}
-	    } else {
-	    	// Re-use the clientPosts array
+	    } else if(req.query.ajax == 'previous'){
+			res.send(currentPos);
+		} else {
+			// Re-use the clientPosts array
 	        res.render('overview', {
-	            clientPosts:clientPosts
-	        });
+				clientPosts:[]
+			});
 	    } 
 	} else {
     	res.render('welcome');

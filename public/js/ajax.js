@@ -1,9 +1,31 @@
 // AJAX
 var loading = false;
+var goneThrough = false;
+var i = 10;
+var y = 7;
+var postID = 1;
+var removedPosts = [];
+
+if(!document.getElementById('post1')){
+	var xhttp;
+	xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function(){
+		if(this.readyState == 4 && this.status == 200){
+			console.log("Previous Position: " + this.response);
+		} else if(this.readyState == 4){
+			console.log("It was not a reload");
+		}
+	}
+	xhttp.open("GET","http://localhost:3000?ajax=previous", true);
+	xhttp.send();
+}
+
 $(window).scroll(function(){ 
    if($(window).scrollTop() >= $(document).height() - $(window).height() - 10 && !loading){
 		loadPosts();
 	}
+
+	sendScrollPosition();
 });
 
 function loadPosts(){
@@ -14,28 +36,46 @@ function loadPosts(){
 		if(this.readyState == 4 && this.status == 200){
 			var posts = eval('(' + this.responseText + ')');
 			posts.forEach((post) => {
-				var postBody = "<center><div class=\"post-content\"><div class=\"main\"><div class=\"card\"><div class=\"card-header\"><h2>" + post.title + "</h2></div><div class=\"card-body\"><p class=\"card-text\">" + post.body + "</p><p class=\"date\">" + getPostDate(post.post_date) + "</p><ul class=\"meta\"><li>" + getPostUser(post.author) + "</li></ul><a href=\"/posts/view/" + post._id + "\" class=\"btn btn-primary\">View Post</a></div></div></div></div></center>";
+				i++;
+				var postBody = "<center id=\"post" + i + "\"><div class=\"post-content\"><div class=\"main\"><div class=\"card\"><div class=\"card-header\"><h2>" + post.title + "</h2></div><div class=\"card-body\"><p class=\"card-text\">" + post.body + "</p><p class=\"date\">" + getPostDate(post.post_date) + "</p><ul class=\"meta\"><li>" + getPostUser(post.author) + "</li></ul><a href=\"/posts/view/" + post._id + "\" class=\"btn btn-primary\">View Post</a></div></div></div></div></center>";
 				$('.posts').append(postBody);
 				console.log(post._id);
 			});
+
+			for(var x = 0; x < y; x++){
+				removePosts(() => console.log("Removed Post " + (postID - 1)));
+			}
+
+			if(!goneThrough){
+				y+=3;
+				goneThrough = true;
+			}
+
 			loading = false;
 		} else if(this.status == 500){
 			console.log("No More Posts");
 		}
 	}
-	xhttp.open("GET","http://localhost:3000?ajax=true", true);
+	xhttp.open("GET","http://localhost:3000?ajax=get", true);
+	xhttp.send();
+}
+
+function sendScrollPosition(){
+	var scrollPosition = window.scrollY;
+	var xhttp;
+	xhttp = new XMLHttpRequest();
+	xhttp.open('GET', 'http://localhost:3000?ajax=scroll&scroll=' + scrollPosition, true);
 	xhttp.send();
 }
 
 function getPostDate(date){
 	date = new Date(date);
-	console.log(date);
-	console.log(typeof(date));
 	var dayOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
 	var months = ["January","February","March","April","May","June","July","August","September","October","November","December"]
 	var dayEndings = ["th","st","nd","rd","th","th","th","th","th","th"] 
 	var postDate = (Date.now()-Date.parse(date))/(1000*3600);
 	var postDayOfMonth = date.getDate();
+	var stringDayOfMonth = postDayOfMonth.toString().slice(-1);
 	var now = new Date();
 
 	// Posts Within 24hrs
@@ -63,14 +103,14 @@ function getPostDate(date){
          return "Yesterday";
       // Posts Within a Week 
       } else if(now.getDate() - postDayOfMonth <= 7){ 
-         return dayofWeek[date.getDay()] + " the " + postDayOfMonth + dayEndings[postDayOfMonth.slice(-1)];
+         return dayOfWeek[date.getDay()] + " the " + postDayOfMonth + dayEndings[stringDayOfMonth];
       // Posts Within the Same Year
       } else if(now.getYear() == date.getYear()){
-         return months[date.getMonth()] + " " + postDayOfMonth + dayEndings[postDayOfMonth.slice(-1)];
+         return months[date.getMonth()] + " " + postDayOfMonth + dayEndings[stringDayOfMonth];
       } else{
       	// Posts Within 3 Months -->
          if(postDate/(24*30) <= 3){
-            return months[date.getMonth()] + " " + postDayOfMonth + dayEndings[postDayOfMonth.slice(-1)] + ", " + date.getYear();
+            return months[date.getMonth()] + " " + postDayOfMonth + dayEndings[stringDayOfMonth] + ", " + date.getYear();
          // Posts in Another Year
          } else{
             return months[date.getMonth()] + " " + date.getYear();
@@ -87,4 +127,12 @@ function getPostUser(user){
    } else{
 		return "Posted by <a href=\"/users/view/" + user + "\">" + user;
 	}
+}
+
+function removePosts(cb){
+	var post = document.getElementById("post" + postID);
+	var removedPost = post.parentNode.removeChild(post);
+	removedPosts.push(removedPost);
+	postID++;
+	cb();
 }

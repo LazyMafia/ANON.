@@ -5,11 +5,13 @@
 <% var dayOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"] %>
 <% var months = ["January","February","March","April","May","June","July","August","September","October","November","December"] %>
 <% var dayEndings = ["th","st","nd","rd","th","th","th","th","th","th"] %>
+<% var i = 0 %>
 
 <h1>Overview</h1>
 <div class="posts">
 <% clientPosts.forEach(function(post){ %>
-  <center>
+  <% i++ %>
+  <center id="post<%= i %>">
     <div class="post-content">
       <div class="main">    
         <div class="card">
@@ -21,6 +23,7 @@
             <p class="date">
               <% var postDate = (Date.now()-Date.parse(post.post_date))/(1000*3600) %>
               <% var postDayOfMonth = post.post_date.getDate() %>
+              <% var stringDayOfMonth = postDayOfMonth.toString().slice(-1) %>
               <% var now = new Date() %>
 
               <!-- Posts Within 24hrs -->
@@ -48,14 +51,14 @@
                   Yesterday
                 <!-- Posts Within a Week -->
                 <% } else if(now.getDate() - postDayOfMonth <= 7){ %>
-                  <%= dayofWeek[post.post_date.getDay()] %> the <%= postDayOfMonth %><%= dayEndings[postDayOfMonth.slice(-1)] %>
+                  <%= dayOfWeek[post.post_date.getDay()] %> the <%= postDayOfMonth %><%= dayEndings[stringDayOfMonth] %>
                 <!-- Posts Within the Same Year -->
                 <% } else if(now.getYear() == post.post_date.getYear()){ %>
-                  <%= months[post.post_date.getMonth()] %> <%= postDayOfMonth %><%= dayEndings[postDayOfMonth.slice(-1)] %>
+                  <%= months[post.post_date.getMonth()] %> <%= postDayOfMonth %><%= dayEndings[stringDayOfMonth] %>
                 <% } else{ %>
                   <!-- Posts Within 3 Months -->
                   <% if(postDate/(24*30) <= 3){ %>
-                    <%= months[post.post_date.getMonth()] %> <%= postDayOfMonth %><%= dayEndings[postDayOfMonth.slice(-1)] %>, <%= post.post_date.getYear() %>
+                    <%= months[post.post_date.getMonth()] %> <%= postDayOfMonth %><%= dayEndings[stringDayOfMonth] %>, <%= post.post_date.getYear() %>
                   <!-- Posts in Another Year -->
                   <% } else{ %>
                     <%= months[post.post_date.getMonth()] %> <%= post.post_date.getYear() %>

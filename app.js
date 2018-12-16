@@ -96,14 +96,6 @@ app.post('*', function(req, res, next){
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// Home Route
-// app.get('/', function(req, res){
-// 	if(req.user != null || welcomeContinue){
-// 		res.render('viewpost');
-// 	} else {
-// 		res.render('welcome');
-// 	}
-// });
 let viewPosts = require('./routes/index');
 app.use('/', viewPosts);
 
