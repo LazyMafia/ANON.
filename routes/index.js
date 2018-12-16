@@ -20,8 +20,6 @@ var userTrendingPercentage = 38;
 var newPercentage = 30;
 var userNewPercentage = 15; 
 var popularPostTimeframe = 90;
-var callbackNum = 0;
-var generateMore = false;
 var empty = false;
 var userObj;
 
@@ -31,17 +29,6 @@ let User = require('../models/user');
 let Category = require('../models/category');
 // Bring in Post Model
 let Post = require('../models/post');
-
-router.get('/ajax/7h2p8HF0a3', function(req, res){
-	if(empty){
-		console.log("No more");
-	} else{
-		postGenerationRequests++;
-		generatePosts(() => {
-			res.send(clientPosts);
-		});
-	}
-});
 
 router.get('/', function(req, res){
     userObj = req.user;
@@ -60,14 +47,13 @@ router.get('/', function(req, res){
 	        });
 	    } else if(req.query.ajax == "true"){
 	    	if(!empty){
-	    		console.log("Generated New");
-	    		console.log(empty);
+				postGenerationRequests++;
 	    		allocateClientPosts(() => {
-	    			res.send(clientPosts);
+	    			res.send(clientPosts.slice(-10));
 	    		});
 	    	} else{
 	    		console.log("Empty");
-	    		res.send(0);
+	    		res.sendStatus(500);
 	    	}
 	    } else {
 	    	// Re-use the clientPosts array
@@ -206,7 +192,7 @@ function generatePosts(cb){
 				}
 
 				// Generate 30 new clientPosts
-				for(var i = 0; i < 30; i++){
+				while(clientPostsRaw.length < posts.length){
 					var rand = Math.floor(Math.random()*100) + 1;
 
 					if(userObj && rand <= interestPercentage){
@@ -435,8 +421,6 @@ function TNI(post){
 
 function allocateClientPosts(cb){
 	while(clientPosts.length < postGenerationRequests*10){
-		console.log(clientPostsRaw.length);
-		console.log(clientGenerationCalls);
 		if(clientPostsRaw[clientGenerationCalls]){
 			clientPosts.push(clientPostsRaw[clientGenerationCalls]);
 			clientGenerationCalls++;
