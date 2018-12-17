@@ -5,13 +5,14 @@ var i = 10;
 var y = 7;
 var postID = 1;
 var removedPosts = [];
+var currentPost = 1;
 
 if(!document.getElementById('post1')){
 	var xhttp;
 	xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function(){
 		if(this.readyState == 4 && this.status == 200){
-			console.log("Previous Position: " + this.response);
+			console.log(this.response);
 		} else if(this.readyState == 4){
 			console.log("It was not a reload");
 		}
@@ -25,6 +26,9 @@ $(window).scroll(function(){
 		loadPosts();
 	}
 
+	if($(window).scrollTop() >= $('#post' + currentPost).position().top){
+		sendCurrentPost();
+	}
 	sendScrollPosition();
 });
 
@@ -65,6 +69,14 @@ function sendScrollPosition(){
 	var xhttp;
 	xhttp = new XMLHttpRequest();
 	xhttp.open('GET', 'http://localhost:3000?ajax=scroll&scroll=' + scrollPosition, true);
+	xhttp.send();
+}
+
+function sendCurrentPost(){
+	currentPost++;
+	var xhttp;
+	xhttp = new XMLHttpRequest();
+	xhttp.open('GET', 'http://localhost:3000?ajax=postpos&pos=' + currentPost, true);
 	xhttp.send();
 }
 

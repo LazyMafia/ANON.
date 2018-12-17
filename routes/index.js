@@ -23,6 +23,7 @@ var popularPostTimeframe = 90;
 var empty = false;
 var userObj;
 var currentPos;
+var currentPost;
 
 // Bring in Post Model
 let Post = require('../models/post');
@@ -46,6 +47,10 @@ router.get('/', function(req, res){
 			currentPos = req.query.scroll;
 			console.log(currentPos);
 			res.sendStatus(200);
+		} else if(req.query.ajax == 'postpos'){
+			currentPost = req.query.pos;
+			console.log(currentPost);
+			res.sendStatus(200);
 		} else if(req.query.ajax == 'get'){
 	    	if(!empty){
 				postGenerationRequests++;
@@ -56,7 +61,7 @@ router.get('/', function(req, res){
 	    		res.sendStatus(500);
 	    	}
 	    } else if(req.query.ajax == 'previous'){
-			res.send(currentPos);
+			res.send("Previous Scroll Position: " + currentPos + ", Previous Post: " + currentPost);
 		} else {
 			// Re-use the clientPosts array
 	        res.render('overview', {
