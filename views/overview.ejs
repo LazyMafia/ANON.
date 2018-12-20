@@ -11,7 +11,7 @@
 <div class="posts">
 <% clientPosts.forEach(function(post){ %>
   <% i++ %>
-  <center id="post<%= i %>">
+  <center id="<%= i %>">
     <div class="post-content">
       <div class="main">    
         <div class="card">
@@ -124,6 +124,6 @@
 <script src="js/jquery-2.1.4.js"></script>
 <script src="js/jquery.menu-aim.js"></script>
 <script src="js/main.js"></script> <!-- Resource jQuery -->
-<script src="js/ajax.js"></script>
+<script src="js/postsAjax.js"></script>
 </body>
 </html>

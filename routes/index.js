@@ -22,8 +22,7 @@ var userNewPercentage = 15;
 var popularPostTimeframe = 90;
 var empty = false;
 var userObj;
-var currentPos;
-var currentPost;
+var currentPost = 0;
 
 // Bring in Post Model
 let Post = require('../models/post');
@@ -31,7 +30,8 @@ let Post = require('../models/post');
 router.get('/', function(req, res){
     userObj = req.user;
     if(req.user || welcomeContinue){
-	    if(clientPosts.length < 1 && !empty){
+		console.log(req.query);
+	    if(clientPostsRaw.length < 1 && !empty){
 	    	// Get new clientPosts
 	        postGenerationRequests++;
 	        generatePosts(() => {
@@ -40,28 +40,34 @@ router.get('/', function(req, res){
 	        	console.log(interestPosts.length + " -> " + interestGenerationCalls);
 	        	console.log(popularPosts.length + " -> " + popularGenerationCalls);
 	            res.render('overview', {
-	                clientPosts:clientPosts
+	                clientPosts:[]
 	            });
 	        });
-	    } else if(req.query.ajax == 'scroll'){
-			currentPos = req.query.scroll;
-			console.log(currentPos);
-			res.sendStatus(200);
-		} else if(req.query.ajax == 'postpos'){
+	    } else if(req.query.ajax == 'postpos'){
 			currentPost = req.query.pos;
-			console.log(currentPost);
 			res.sendStatus(200);
-		} else if(req.query.ajax == 'get'){
-	    	if(!empty){
-				postGenerationRequests++;
-	    		allocateClientPosts(() => {
-	    			res.send(clientPosts.slice(-10));
-	    		});
-	    	} else{
-	    		res.sendStatus(500);
-	    	}
-	    } else if(req.query.ajax == 'previous'){
-			res.send("Previous Scroll Position: " + currentPos + ", Previous Post: " + currentPost);
+		} else if(req.query.ajax == 'maxpost'){
+			res.send(clientPostsRaw.length.toString());
+		} else if(req.query.ajax == 'previous'){
+			res.send(currentPost.toString());
+		} else if(req.query.ajax == 'getposts'){
+			if(clientPosts[req.query.b] && clientPosts[req.query.a]){
+				res.send(clientPosts.slice(req.query.a, Number(req.query.b) + 1));
+			} else if(clientPosts[req.query.a]){
+				if(!empty){
+					allocateClientPosts(req.query.b, () => {
+						if(clientPosts[req.query.b]){
+							res.send(clientPosts.slice(req.query.a, Number(req.query.b) + 1));
+						} else{
+							res.send(clientPosts.slice(req.query.a, clientPosts.length - 1));
+						}
+					});
+				} else{
+					res.send(clientPosts.slice(req.query.a, clientPosts.length - 1));
+				}
+			} else{
+				res.send(clientPosts.slice(0, Number(req.query.b) + 1));
+			}
 		} else {
 			// Re-use the clientPosts array
 	        res.render('overview', {
@@ -75,7 +81,7 @@ router.get('/', function(req, res){
 
 function generatePosts(cb){
 	if(clientPostsRaw.length - postGenerationRequests*10 >= 0){
-		allocateClientPosts(() => cb());
+		allocateClientPosts(10, () => cb());
 	} else{
 		Post.find({}, function(err, posts){
 			if(trendingPosts.length > 0){
@@ -83,7 +89,7 @@ function generatePosts(cb){
 					clientPostsRaw.push(extraPosts[extraGenerationCalls]);
 					extraGenerationCalls++;
 				}
-				allocateClientPosts(() => cb());
+				allocateClientPosts(10, () => cb());
 			} else{
 				if(userObj){
 					// User Logged In
@@ -220,7 +226,7 @@ function generatePosts(cb){
 							clientPostsRaw.push(extraPosts[extraGenerationCalls]);
 							extraGenerationCalls++;
 						} else{
-							allocateClientPosts(() => cb());
+							allocateClientPosts(10, () => cb());
 							break;
 						}
 					} else if(userObj && rand <= interestPercentage + userTrendingPercentage || rand <= trendingPercentage){
@@ -241,7 +247,7 @@ function generatePosts(cb){
 							clientPostsRaw.push(extraPosts[extraGenerationCalls]);
 							extraGenerationCalls++;
 						} else{
-							allocateClientPosts(() => cb());
+							allocateClientPosts(10, () => cb());
 							break;
 						}
 					} else if(userObj && rand <= interestPercentage + userTrendingPercentage + userNewPercentage || rand <= trendingPercentage + newPercentage){
@@ -265,7 +271,7 @@ function generatePosts(cb){
 							clientPostsRaw.push(extraPosts[extraGenerationCalls]);
 							extraGenerationCalls++;
 						} else{
-							allocateClientPosts(() => cb());
+							allocateClientPosts(10, () => cb());
 							break;
 						}
 					} else{
@@ -286,13 +292,13 @@ function generatePosts(cb){
 							clientPostsRaw.push(extraPosts[extraGenerationCalls]);
 							extraGenerationCalls++;
 						} else{
-							allocateClientPosts(() => cb());
+							allocateClientPosts(10, () => cb());
 							break;
 						}
 					}
 				}
 
-				allocateClientPosts(() => cb())
+				allocateClientPosts(10, () => cb())
 			}
 		});
 	}
@@ -426,8 +432,8 @@ function TNI(post){
 	}
 }
 
-function allocateClientPosts(cb){
-	while(clientPosts.length < postGenerationRequests*10){
+function allocateClientPosts(num, cb){
+	while(clientPosts.length <= num){
 		if(clientPostsRaw[clientGenerationCalls]){
 			clientPosts.push(clientPostsRaw[clientGenerationCalls]);
 			clientGenerationCalls++;

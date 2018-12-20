@@ -1,18 +1,33 @@
 // AJAX
 var loading = false;
-var goneThrough = false;
+var empty = false;
 var i = 10;
-var y = 7;
-var postID = 1;
-var removedPosts = [];
 var currentPost = 1;
+var lowestPost = 1;
+var highestPost = 10;
+var maxPost;
+
+$.fn.scrollView = function(){
+	return this.each(function(){
+		//$('html, body').animate({
+				scrollTop: $(this).offset().top - 70
+		//}, 1000);
+	});
+}
 
 if(!document.getElementById('post1')){
 	var xhttp;
 	xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function(){
 		if(this.readyState == 4 && this.status == 200){
-			console.log(this.response);
+			currentPost = this.response;
+			if(this.response > 3){
+				lowestPost = currentPost - 3;
+				getPosts(currentPost - 4, Number(currentPost) + 9, () => {$('#post' + currentPost).scrollView()});
+			} else{
+				lowestPost = 1;
+				getPosts(0, 9, () => {$('#post' + currentPost).scrollView()});
+			}
 		} else if(this.readyState == 4){
 			console.log("It was not a reload");
 		}
@@ -21,20 +36,9 @@ if(!document.getElementById('post1')){
 	xhttp.send();
 }
 
-$(window).scroll(function(){ 
-   if($(window).scrollTop() >= $(document).height() - $(window).height() - 10 && !loading){
-		loadPosts();
-	}
-
-	if($(window).scrollTop() >= $('#post' + currentPost).position().top){
-		sendCurrentPost();
-	}
-	sendScrollPosition();
-});
-
-function loadPosts(){
-	loading = true;
+function getPosts(a, b, cb){
 	var xhttp;
+	i = a;
 	xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function(){
 		if(this.readyState == 4 && this.status == 200){
@@ -43,39 +47,132 @@ function loadPosts(){
 				i++;
 				var postBody = "<center id=\"post" + i + "\"><div class=\"post-content\"><div class=\"main\"><div class=\"card\"><div class=\"card-header\"><h2>" + post.title + "</h2></div><div class=\"card-body\"><p class=\"card-text\">" + post.body + "</p><p class=\"date\">" + getPostDate(post.post_date) + "</p><ul class=\"meta\"><li>" + getPostUser(post.author) + "</li></ul><a href=\"/posts/view/" + post._id + "\" class=\"btn btn-primary\">View Post</a></div></div></div></div></center>";
 				$('.posts').append(postBody);
-				console.log(post._id);
 			});
-
-			for(var x = 0; x < y; x++){
-				removePosts(() => console.log("Removed Post " + (postID - 1)));
+			// Checks if there are more posts
+			if(i >= maxPost){
+				empty = true;
 			}
-
-			if(!goneThrough){
-				y+=3;
-				goneThrough = true;
-			}
-
-			loading = false;
-		} else if(this.status == 500){
-			console.log("No More Posts");
+			highestPost = i;
+			cb();
 		}
 	}
-	xhttp.open("GET","http://localhost:3000?ajax=get", true);
+	xhttp.open('GET', 'http://localhost:3000?ajax=getposts&a=' + a + '&b=' + b, true);
 	xhttp.send();
 }
 
-function sendScrollPosition(){
-	var scrollPosition = window.scrollY;
+function getRemovedPosts(a, b, cb){
 	var xhttp;
+	i = b + 1;
 	xhttp = new XMLHttpRequest();
-	xhttp.open('GET', 'http://localhost:3000?ajax=scroll&scroll=' + scrollPosition, true);
+	xhttp.onreadystatechange = function(){
+		if(this.readyState == 4 && this.status == 200){
+			var posts = eval('(' + this.responseText + ')');
+			posts.forEach((post) => {
+				i--;
+				var postBody = "<center id=\"post" + i + "\"><div class=\"post-content\"><div class=\"main\"><div class=\"card\"><div class=\"card-header\"><h2>" + post.title + "</h2></div><div class=\"card-body\"><p class=\"card-text\">" + post.body + "</p><p class=\"date\">" + getPostDate(post.post_date) + "</p><ul class=\"meta\"><li>" + getPostUser(post.author) + "</li></ul><a href=\"/posts/view/" + post._id + "\" class=\"btn btn-primary\">View Post</a></div></div></div></div></center>";
+				$('#post' + lowestPost).insertBefore(postBody, $('#post' + lowestPost));
+			});
+			console.log("PREPEND BABY");
+			lowestPost = i;
+			cb();
+		}
+	}
+	xhttp.open('GET', 'http://localhost:3000?ajax=getposts&a=' + a + '&b=' + b, true);
 	xhttp.send();
 }
 
-function sendCurrentPost(){
-	currentPost++;
+$(window).scroll(function(){ 
+	if($(window).scrollTop() >= $('#post' + currentPost).offset().top && !loading){
+		sendCurrentPost('up', () => {loading = false});
+	} else if($(window).scrollTop() <= $('#post' + (currentPost - 1)).offset().top && !loading){
+		sendCurrentPost('down', () => {loading = false;});
+	}
+
+	if($(window).scrollTop() >= $(document).height() - $(window).height() - 10 && !loading && !empty){
+		loadPosts();
+	} else if($(window).scrollTop() <= 300 && !loading && lowestPost != 1){
+		loadRemovedPosts();
+	}
+	//sendScrollPosition();
+});
+
+function loadPosts(){
+	loading = true;
+	getPosts(highestPost, highestPost + 6, () => {
+		console.log('Current Post: ' + currentPost + ', Lowest Post: ' + lowestPost);
+		while(currentPost - lowestPost > 3){
+			removeLowPosts(() => {});
+		}
+		$('#post' + currentPost).scrollView();
+		loading = false;
+	});
+}
+
+function loadRemovedPosts(){
+	loading = true;
+	getRemovedPosts(lowestPost - 8, lowestPost - 2, () => {
+		while(highestPost - currentPost > 6){
+			removeHighPosts(() => {})
+		}
+		$('#post' + currentPost).scrollView();
+		loading = false;
+	});
+}
+
+// function loadPosts(){
+// 	loading = true;
+// 	var xhttp;
+// 	xhttp = new XMLHttpRequest();
+// 	xhttp.onreadystatechange = function(){
+// 		if(this.readyState == 4 && this.status == 200){
+// 			var posts = eval('(' + this.responseText + ')');
+// 			posts.forEach((post) => {
+// 				i++;
+// 				var postBody = "<center id=\"post" + i + "\"><div class=\"post-content\"><div class=\"main\"><div class=\"card\"><div class=\"card-header\"><h2>" + post.title + "</h2></div><div class=\"card-body\"><p class=\"card-text\">" + post.body + "</p><p class=\"date\">" + getPostDate(post.post_date) + "</p><ul class=\"meta\"><li>" + getPostUser(post.author) + "</li></ul><a href=\"/posts/view/" + post._id + "\" class=\"btn btn-primary\">View Post</a></div></div></div></div></center>";
+// 				$('.posts').append(postBody);
+// 				console.log(post._id);
+// 			});
+
+// 			while(currentPost - lowestPost > 3){
+// 				removePosts(() => console.log("Removed Post " + (lowestPost - 1)));
+// 			}
+
+// 			$('#post' + currentPost).scrollView();
+
+// 			loading = false;
+// 		} else if(this.status == 500){
+// 			console.log("No More Posts");
+// 		}
+// 	}
+// 	xhttp.open("GET","http://localhost:3000?ajax=getposts&a=" + highestPost + "&b=" + (highestPost + 10), true);
+// 	xhttp.send();
+// }
+
+// function sendScrollPosition(){
+// 	var scrollPosition = window.scrollY;
+// 	var xhttp;
+// 	xhttp = new XMLHttpRequest();
+// 	xhttp.open('GET', 'http://localhost:3000?ajax=scroll&scroll=' + scrollPosition, true);
+// 	xhttp.send();
+// }
+
+function sendCurrentPost(direction, cb){
+	loading = true;
+	if(direction == 'up'){
+		currentPost++;
+	} else{
+		currentPost--;
+	}
 	var xhttp;
 	xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function(){
+		if(this.readyState == 4 && this.status == 200){
+			maxPost = this.responseText;
+			cb();
+		} else if(this.readyState == 4){
+			cb();
+		}
+	}
 	xhttp.open('GET', 'http://localhost:3000?ajax=postpos&pos=' + currentPost, true);
 	xhttp.send();
 }
@@ -141,10 +238,16 @@ function getPostUser(user){
 	}
 }
 
-function removePosts(cb){
-	var post = document.getElementById("post" + postID);
-	var removedPost = post.parentNode.removeChild(post);
-	removedPosts.push(removedPost);
-	postID++;
+function removeLowPosts(cb){
+	var post = document.getElementById("post" + lowestPost);
+	post.parentNode.removeChild(post);
+	lowestPost++;
+	cb();
+}
+
+function removeHighPosts(cb){
+	var post = document.getElementById("post" + highestPost);
+	post.parentNode.removeChild(post);
+	highestPost--;
 	cb();
 }
