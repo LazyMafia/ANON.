@@ -12,6 +12,7 @@ var posts;
 
 // On Scroll
 $(window).scroll(function(){
+  console.log(currentPost);
     // If User Goes to Next Post 
 	if($(window).scrollTop() >= $('#' + currentPost).offset().top && !loading){
         currentPost++;
@@ -26,6 +27,7 @@ $(window).scroll(function(){
         loadPosts();
     // If User is Close to Top of the Page
 	} else if($(window).scrollTop() <= 300 && !loading && lowestPost != 1){
+    console.log("LOAD REMOVED");
 		loadRemovedPosts();
 	}
 });
@@ -139,11 +141,12 @@ function loadRemovedPosts(){
         i = lowestPost;
         // Flip the Array
         posts.reverse();
+        console.log(posts);
         posts.forEach((post) => {
             i--;
             // Prepend Each Post
             var postBody = "<center id=\"" + i + "\"><div class=\"post-content\"><div class=\"main\"><div class=\"card\"><div class=\"card-header\"><h2>" + post.title + "</h2></div><div class=\"card-body\"><p class=\"card-text\">" + post.body + "</p><p class=\"date\">" + getPostDate(post.post_date) + "</p><ul class=\"meta\"><li>" + getPostUser(post.author) + "</li></ul><a href=\"/posts/view/" + post._id + "\" class=\"btn btn-primary\">View Post</a></div></div></div></div></center>";
-            $('posts').insertBefore(postBody, document.getElementById(lowestPost));
+            $('posts').prepend(postBody);
             console.log(lowestPost);
             lowestPost--;
         });
