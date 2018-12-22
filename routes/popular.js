@@ -29,7 +29,6 @@ router.get('/', function(req, res){
     } else if(req.query.ajax == 'getposts'){
         a = Number(req.query.a);
         b = Number(req.query.b);
-        console.log(req.query);
         if(clientPosts[b] && clientPosts[a]){
             res.send(clientPosts.slice(a, b + 1));
         } else{
@@ -42,7 +41,6 @@ router.get('/', function(req, res){
                     }
                 });
             } else{
-                console.log(clientPosts.slice(a, clientPosts.length));
                 res.send(clientPosts.slice(a, clientPosts.length));
             }
         }

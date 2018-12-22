@@ -85,44 +85,60 @@
 				</li>
 
 				<li class="has-children comments">
-					<a href="#0">Comments</a>
-					
-					<ul>
-						<li><a href="#0">All Comments</a></li>
-						<li><a href="#0">Edit Comment</a></li>
-						<li><a href="#0">Delete Comment</a></li>
-					</ul>
+					<% if(user){ %>
+						<a href="/comments">Comments</a>
+						
+						<ul>
+							<li><a href="#0">All Comments</a></li>
+							<li><a href="#0">Edit Comment</a></li>
+							<li><a href="#0">Delete Comment</a></li>
+						</ul>
+					<% } else{ %>
+						<a href="/login">Comments</a>
+					<% } %>
 				</li>
 			</ul>
 
 			<ul>
 				<li class="cd-label">Secondary</li>
 				<li class="has-children bookmarks">
-					<a href="#0">Bookmarks</a>
-					
-					<ul>
-						<li><a href="#0">All Bookmarks</a></li>
-						<li><a href="#0">Edit Bookmark</a></li>
-						<li><a href="#0">Import Bookmark</a></li>
-					</ul>
+					<% if(user){ %>
+						<a href="/bookmarks">Bookmarks</a>
+						
+						<ul>
+							<li><a href="#0">All Bookmarks</a></li>
+							<li><a href="#0">Edit Bookmark</a></li>
+							<li><a href="#0">Import Bookmark</a></li>
+						</ul>
+					<% } else{ %>
+						<a href="/login">Bookmarks</a>
+					<% } %>
 				</li>
 				<li class="has-children images">
-					<a href="#0">Images</a>
-					
-					<ul>
-						<li><a href="#0">All Images</a></li>
-						<li><a href="#0">Edit Image</a></li>
-					</ul>
+					<% if(user){ %>
+						<a href="/images">Images</a>
+						
+						<ul>
+							<li><a href="#0">All Images</a></li>
+							<li><a href="#0">Edit Image</a></li>
+						</ul>
+					<% } else{ %>
+						<a href="/login">Images</a>
+					<% } %>
 				</li>
 
 				<li class="has-children users">
-					<a href="#0">Users</a>
-					
-					<ul>
-						<li><a href="#0">All Users</a></li>
-						<li><a href="#0">Edit User</a></li>
-						<li><a href="#0">Add User</a></li>
-					</ul>
+					<% if(user){ %>
+						<a href="/users">Users</a>
+						
+						<ul>
+							<li><a href="#0">All Users</a></li>
+							<li><a href="#0">Edit User</a></li>
+							<li><a href="#0">Add User</a></li>
+						</ul>
+					<% } else{ %>
+						<a href="/login">Users</a>
+					<% } %>
 				</li>
 			</ul>
 
