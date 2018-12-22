@@ -42,7 +42,7 @@ window.onload = function(){
             }
         }
     }
-    xhttp.open('GET', 'http://localhost:3000/trending?ajax=maxpost', true);
+    xhttp.open('GET', 'http://localhost:3000/new?ajax=maxpost', true);
     xhttp.send();
 };
 
@@ -138,7 +138,7 @@ function getPosts(a, b, cb){
             cb();
         }
 	}
-	xhttp.open('GET', 'http://localhost:3000/trending?ajax=getposts&a=' + a + '&b=' + b, true);
+	xhttp.open('GET', 'http://localhost:3000/new?ajax=getposts&a=' + a + '&b=' + b, true);
 	xhttp.send();
 }
 

@@ -126,6 +126,14 @@ app.get('/support', function(req, res){
 let trending = require('./routes/trending');
 app.use('/trending', trending);
 
+// New Route
+let newposts = require('./routes/newposts');
+app.use('/new', newposts);
+
+// Popular Route
+let popular = require('./routes/popular');
+app.use('/popular', popular);
+
 // Post Route
 let posts = require('./routes/posts');
 app.use('/posts', posts);

@@ -13,7 +13,7 @@ router.get('/', function(req, res){
     if(clientPostsRaw.length < 1 && !empty){
         // Get new clientPosts
         generatePosts(() => {
-            res.render('trending', {
+            res.render('newposts', {
                 clientPosts:[]
             });
         });
@@ -53,7 +53,7 @@ router.get('/', function(req, res){
         }
     } else {
         // Re-use the clientPosts array
-        res.render('trending', {
+        res.render('newposts', {
             clientPosts:[]
         });
     }
@@ -62,12 +62,12 @@ router.get('/', function(req, res){
 function generatePosts(cb){
     Post.find({}, function(err, posts){
         posts.forEach((post) => {
-            if((Date.now()-Date.parse(post.post_date))/(1000*3600*24) <= 7){
+            if((Date.now()-Date.parse(post.post_date))/(1000*3600*24) <= 1){
                 clientPostsRaw.push(post);
             }
         });
         // Sort the Array
-        clientPostsRaw.sort((a,b) => (a.score/(Date.now() - Date.parse(a.post_date)) > b.score/(Date.now() - Date.parse(b.post_date))) ? 1 : ((b.score/(Date.now() - Date.parse(b.post_date)) > a.score/(Date.now() - Date.parse(a.post_date))) ? -1 : 0));
+        clientPostsRaw.sort((a,b) => (a.score > b.score) ? 1 : ((b.score > a.score) ? -1 : 0));
         allocateClientPosts(10, () => cb());
     });
 }

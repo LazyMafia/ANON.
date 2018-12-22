@@ -19,11 +19,9 @@ $(window).scroll(function(){
     // If User Goes to Next Post 
 	if($(window).scrollTop() >= $('#' + currentPost).offset().top && !loading){
         currentPost++;
-        sendCurrentPost();
     // If User Goes to Previous Post
 	} else if($(window).scrollTop() <= $('#' + currentPost).offset().top && !loading && currentPost != 1){
         currentPost--;
-		sendCurrentPost();
 	}
     // If User Reaches Bottom of Page
 	if($(window).scrollTop() >= $(document).height() - $(window).height() - 10 && !loading && !empty){
@@ -247,23 +245,20 @@ function getPostDate(date){
          if(Math.round(60/(1/postDate)) <= 1){
          	return "Just Posted";
          } else{
-            return "Posted " + Math.round(60/(1/postDate)) + " Minutes Ago";
+            return Math.round(60/(1/postDate)) + " Minutes Ago";
 			}
       } else{
          if(Math.round(postDate) >= 2){
-            return "Posted " + Math.round(postDate) + " Hours Ago";
+            return Math.round(postDate) + " Hours Ago";
          // Posts from an Hour Ago
          } else{ 
-            return "Posted An Hour Ago";
+            return "< 1 Hour";
          }
       }
    // Posts more than a Day Old-->
    } else{
-      // Posts from Yesterday 
-      if(date.getDay() + 1 == now.getDay() || date.getDay() - 6 == now.getDay()){
-         return "Yesterday";
-      // Posts Within a Week 
-      } else if(now.getDate() - postDayOfMonth <= 7){ 
+      // Posts within the Week
+      if(now.getDate() - postDayOfMonth <= 7){ 
          return dayOfWeek[date.getDay()] + " the " + postDayOfMonth + dayEndings[stringDayOfMonth];
       // Posts Within the Same Year
       } else if(now.getYear() == date.getYear()){
