@@ -23,6 +23,9 @@ var popularPostTimeframe = 90;
 var empty = false;
 var userObj;
 var currentPost = 0;
+var removedPostsB;
+var a;
+var b;
 
 // Bring in Post Model
 let Post = require('../models/post');
@@ -30,7 +33,6 @@ let Post = require('../models/post');
 router.get('/', function(req, res){
     userObj = req.user;
     if(req.user || welcomeContinue){
-		console.log(req.query);
 	    if(clientPostsRaw.length < 1 && !empty){
 	    	// Get new clientPosts
 	        postGenerationRequests++;
@@ -45,28 +47,45 @@ router.get('/', function(req, res){
 	        });
 	    } else if(req.query.ajax == 'postpos'){
 			currentPost = req.query.pos;
+			removedPostsB = Number(req.query.b);
 			res.sendStatus(200);
 		} else if(req.query.ajax == 'maxpost'){
 			res.send(clientPostsRaw.length.toString());
 		} else if(req.query.ajax == 'previous'){
 			res.send(currentPost.toString());
 		} else if(req.query.ajax == 'getposts'){
-			if(clientPosts[req.query.b] && clientPosts[req.query.a]){
-				res.send(clientPosts.slice(req.query.a, Number(req.query.b) + 1));
-			} else if(clientPosts[req.query.a]){
+			a = Number(req.query.a);
+			b = Number(req.query.b);
+			console.log(req.query);
+			if(clientPosts[b] && clientPosts[a]){
+				console.log(clientPosts.slice(a, b + 1).length);
+				console.log(clientPosts.slice(a, b + 1));
+				res.send(clientPosts.slice(a, b + 1));
+			} else{
 				if(!empty){
-					allocateClientPosts(req.query.b, () => {
-						if(clientPosts[req.query.b]){
-							res.send(clientPosts.slice(req.query.a, Number(req.query.b) + 1));
+					allocateClientPosts(b, () => {
+						if(clientPosts[b]){
+							console.log("1 <--");
+							console.log(clientPosts.slice(a, b + 1).length);
+							res.send(clientPosts.slice(a, b + 1));
 						} else{
-							res.send(clientPosts.slice(req.query.a, clientPosts.length - 1));
+							console.log("2 <--");
+							console.log(clientPosts.slice(a, clientPosts.length).length);
+							res.send(clientPosts.slice(a, clientPosts.length));
 						}
 					});
 				} else{
-					res.send(clientPosts.slice(req.query.a, clientPosts.length - 1));
+					console.log('3 <--');
+					console.log(clientPosts.slice(a, clientPosts.length).length);
+					res.send(clientPosts.slice(a, clientPosts.length));
 				}
+			}
+		} else if(req.query.ajax == 'getremoved'){
+			if(removedPostsB != 0){
+				console.log(clientPosts.slice(0, removedPostsB));
+				res.send(clientPosts.slice(0, removedPostsB));
 			} else{
-				res.send(clientPosts.slice(0, Number(req.query.b) + 1));
+				res.sendStatus(200);
 			}
 		} else {
 			// Re-use the clientPosts array

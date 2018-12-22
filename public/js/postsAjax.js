@@ -1,18 +1,21 @@
-var dayOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
-var months = ["January","February","March","April","May","June","July","August","September","October","November","December"]
-var dayEndings = ["th","st","nd","rd","th","th","th","th","th","th"] 
+var dayOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+var dayEndings = ["th","st","nd","rd","th","th","th","th","th","th"];
+var removedPosts = [];
+//var removedPostsTemp;
 var loading = false;
 var empty = false;
 var i;
 var currentPost;
 var lowestPost;
 var highestPost;
+//var removedPostsB;
 var maxPost;
 var posts;
+//var postsTemp;
 
 // On Scroll
 $(window).scroll(function(){
-  console.log(currentPost);
     // If User Goes to Next Post 
 	if($(window).scrollTop() >= $('#' + currentPost).offset().top && !loading){
         currentPost++;
@@ -24,10 +27,10 @@ $(window).scroll(function(){
 	}
     // If User Reaches Bottom of Page
 	if($(window).scrollTop() >= $(document).height() - $(window).height() - 10 && !loading && !empty){
-        loadPosts();
+        loading = true;
+        loadPosts(() => {loading = false});
     // If User is Close to Top of the Page
 	} else if($(window).scrollTop() <= 300 && !loading && lowestPost != 1){
-    console.log("LOAD REMOVED");
 		loadRemovedPosts();
 	}
 });
@@ -55,57 +58,75 @@ function reload(){
     xhttp.onreadystatechange = function(){
         if(this.readyState == 4 && this.status == 200){
             currentPost = Number(this.response);
-            if(currentPost > 3){
-                loading = true;
-                lowestPost = currentPost - 3;
-                getPosts(currentPost - 4, currentPost + 9, () => {
-                    i = lowestPost - 1;
-                    posts.forEach((post) => {
-                        i++;
-                        // Append Post
-                        var postBody = "<center id=\"" + i + "\"><div class=\"post-content\"><div class=\"main\"><div class=\"card\"><div class=\"card-header\"><h2>" + post.title + "</h2></div><div class=\"card-body\"><p class=\"card-text\">" + post.body + "</p><p class=\"date\">" + getPostDate(post.post_date) + "</p><ul class=\"meta\"><li>" + getPostUser(post.author) + "</li></ul><a href=\"/posts/view/" + post._id + "\" class=\"btn btn-primary\">View Post</a></div></div></div></div></center>";
-                        $('.posts').append(postBody);
-                        // If there are no more clientPosts left
-                        if(maxPost == i){
-                            empty = true;
-                        }  
-                    });
-                    // Scroll back to Current Post
-                    $('#' + currentPost).scrollView();
+            loading = true;
+            lowestPost = 1;
+            getPosts(0, 9, () => {
+                i = 0;
+                posts.forEach((post) => {
+                    i++;
+                    // Append Post
+                    var postBody = "<center id=\"" + i + "\"><div class=\"post-content\"><div class=\"main\"><div class=\"card\"><div class=\"card-header\"><h2>" + post.title + "</h2></div><div class=\"card-body\"><p class=\"card-text\">" + post.body + "</p><p class=\"date\">" + getPostDate(post.post_date) + "</p><ul class=\"meta\"><li>" + getPostUser(post.author) + "</li></ul><a href=\"/posts/view/" + post._id + "\" class=\"btn btn-primary\">View Post</a></div></div></div></div></center>";
+                    $('.posts').append(postBody);
+                    // If there are no more clientPosts left
+                    if(maxPost == i){
+                        empty = true;
+                    }
                     // Variables
                     highestPost = i
-		            loading = false;
+                    currentPost = 1;
+                    loading = false;
                 });
-            } else{
-                loading = true;
-                lowestPost = 1;
-                getPosts(0, 9, () => {
-                    i = 0;
-                    posts.forEach((post) => {
-                        i++;
-                        // Append Post
-                        var postBody = "<center id=\"" + i + "\"><div class=\"post-content\"><div class=\"main\"><div class=\"card\"><div class=\"card-header\"><h2>" + post.title + "</h2></div><div class=\"card-body\"><p class=\"card-text\">" + post.body + "</p><p class=\"date\">" + getPostDate(post.post_date) + "</p><ul class=\"meta\"><li>" + getPostUser(post.author) + "</li></ul><a href=\"/posts/view/" + post._id + "\" class=\"btn btn-primary\">View Post</a></div></div></div></div></center>";
-                        $('.posts').append(postBody);
-                        // If there are no more clientPosts left
-                        if(maxPost == i){
-                            empty = true;
-                        }
-                        // Variables
-                        highestPost = i
-                        currentPost = 1;
-		                loading = false;
-                    });
-                });
-            }
+            });
         }
     }
     xhttp.open("GET","http://localhost:3000?ajax=previous", true);
     xhttp.send();
 }
+            //if(currentPost > 3){
+                // loading = true;
+                // //getRemovedPosts(() => {});
+                // lowestPost = currentPost - 3;
+                // getPosts(0, currentPost + 9, () => {
+                //     removedPostsTemp = posts;
+                //     postsTemp = posts;
+                //     //var i = 0;
+                //     //console.log(posts.splice(0, currentPost - 4));
+                //     removedPosts = removedPostsTemp.splice(0, currentPost - 3);
+                    //posts = postsTemp.slice(currentPost - 3, postsTemp.length);
+                    //posts = postsTemp.splice(currentPost - 4, posts.length - removedPosts.length);
+                    // posts.forEach((post) => {
+                    //     if(removedPosts.length < currentPost - 5){
+                    //         console.log(post);
+                    //         removedPosts[i] = post;
+                    //         i++;
+                    //     }
+                    // });
+                    //posts = posts.slice(i, posts.length);
+                //     console.log("REMOVED: ");
+                //     console.log(removedPosts);
+                //     console.log(posts);
+                //     i = lowestPost - 1;
+                //     posts.forEach((post) => {
+                //         i++;
+                //         // Append Post
+                //         var postBody = "<center id=\"" + i + "\"><div class=\"post-content\"><div class=\"main\"><div class=\"card\"><div class=\"card-header\"><h2>" + post.title + "</h2></div><div class=\"card-body\"><p class=\"card-text\">" + post.body + "</p><p class=\"date\">" + getPostDate(post.post_date) + "</p><ul class=\"meta\"><li>" + getPostUser(post.author) + "</li></ul><a href=\"/posts/view/" + post._id + "\" class=\"btn btn-primary\">View Post</a></div></div></div></div></center>";
+                //         $('.posts').append(postBody);
+                //         // If there are no more clientPosts left
+                //         if(maxPost == i){
+                //             empty = true;
+                //         }  
+                //     });
+                //     // Scroll back to Current Post
+                //     $('#' + currentPost).scrollView();
+                //     // Variables
+                //     highestPost = i
+		        //     loading = false;
+                // });
+            //} else{
+            //}
 
 // Load More Posts
-function loadPosts(){
-    loading = true;
+function loadPosts(cb){
     // Get 10 Posts
 	getPosts(highestPost, highestPost + 9, () => {
         i = highestPost;
@@ -121,70 +142,92 @@ function loadPosts(){
         });
         // Remove Posts
 		while(currentPost - lowestPost > 3){
+            removedPostsB = lowestPost;
 			var post = document.getElementById(lowestPost);
-	        post.parentNode.removeChild(post);
+            removedPosts.push(post.parentNode.removeChild(post));
             lowestPost++;
         }
         // Scroll back to Current Post
         $('#' + currentPost).scrollView();
         // Variables
         highestPost = i
-		loading = false;
+        posts = [];
+        // Callback
+        cb();
 	});
 }
 
 // Load Removed Posts
 function loadRemovedPosts(){
     loading = true;
+    i = removedPosts.length - 1;
     // Get 10 Previous Posts
-    getPosts(lowestPost - 11, lowestPost - 2, () => {
-        i = lowestPost;
-        // Flip the Array
-        posts.reverse();
-        console.log(posts);
-        posts.forEach((post) => {
-            i--;
-            // Prepend Each Post
-            var postBody = "<center id=\"" + i + "\"><div class=\"post-content\"><div class=\"main\"><div class=\"card\"><div class=\"card-header\"><h2>" + post.title + "</h2></div><div class=\"card-body\"><p class=\"card-text\">" + post.body + "</p><p class=\"date\">" + getPostDate(post.post_date) + "</p><ul class=\"meta\"><li>" + getPostUser(post.author) + "</li></ul><a href=\"/posts/view/" + post._id + "\" class=\"btn btn-primary\">View Post</a></div></div></div></div></center>";
-            $('posts').prepend(postBody);
-            console.log(lowestPost);
-            lowestPost--;
-        });
-        // Remove Posts
-        while(highestPost - currentPost > 6){
-            var post = document.getElementById(highestPost);
-	        post.parentNode.removeChild(post);
-	        highestPost--;
-        }
-        // Scroll back to Current Post
-        $('#' + currentPost).scrollView();
+    for(var x = i; x >= removedPosts.length - 1 && i - x <= 10 && removedPosts[x]; x--){
+        // Prepend each Post
+        $('.posts').prepend(removedPosts[x]);
+        // Delete Post From removedPosts Array
+        removedPosts.splice(x);
         // Variables
-        lowestPost = i;
-        loading = false;
-    });
+        lowestPost--;
+    }
+    // Remove Posts
+    while(highestPost - currentPost > 6){
+        var post = document.getElementById(highestPost);
+        post.parentNode.removeChild(post);
+        highestPost--;
+    }
+    // Scroll back to Current Post
+    $('#' + currentPost).scrollView();
+    // Variables
+    loading = false;
+    empty = false;
 }
 
 // Get Posts
 function getPosts(a, b, cb){
-    console.log(a);
-    console.log(b);
 	var xhttp;
 	xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function(){
 		if(this.readyState == 4 && this.status == 200){
-            posts = eval('(' + this.responseText + ')');
+            posts = JSON.parse(this.responseText);
 			cb();
-		}
+		} else if(this.readyState == 4){
+            cb();
+        }
 	}
 	xhttp.open('GET', 'http://localhost:3000?ajax=getposts&a=' + a + '&b=' + b, true);
 	xhttp.send();
 }
 
+// Get Removed Posts from Server
+// function getRemovedPosts(cb){
+//     var xhttp;
+//     xhttp = new XMLHttpRequest();
+//     xhttp.onreadystatechange = function(){
+//         if(this.readyState == 4 && this.status == 200){
+//             removedPosts = this.responseText;
+//             removedPosts = JSON.parse(this.responseText);
+//             console.log(removedPosts);
+//             console.log(this.responseText);
+//             cb();
+//         } else if(this.readyState == 4){
+//             cb();
+//         }
+//     }
+//     xhttp.open('GET', 'http://localhost:3000?ajax=getremoved');
+//     xhttp.send();
+// }
+
 // Send Current Post to Server
 function sendCurrentPost(){
     var xhttp;
-	xhttp = new XMLHttpRequest();
-	xhttp.open('GET', 'http://localhost:3000?ajax=postpos&pos=' + currentPost, true);
+    xhttp = new XMLHttpRequest();
+    // if(removedPosts.length > 0){
+    //     xhttp.open('GET', 'http://localhost:3000?ajax=postpos&pos=' + currentPost + "&b=" + removedPostsB, true);
+    // } else{
+    //     xhttp.open('GET', 'http://localhost:3000?ajax=postpos&pos=' + currentPost, true);
+    // }
+    xhttp.open('GET', 'http://localhost:3000?ajax=postpos&pos=' + currentPost, true);
 	xhttp.send();
 }
 
@@ -251,8 +294,37 @@ function getPostUser(user){
 // Scroll Function
 $.fn.scrollView = function(){
 	return this.each(function(){
-		//$('html, body').animate({
+		$('html, body').animate({
         scrollTop: $(this).offset().top - 70
-		//}, 1000);
+		}, 100);
 	});
 }
+
+// function loadPosts(){
+//     loading = true;
+//     // Get 10 Posts
+// 	getPosts(highestPost, highestPost + 9, () => {
+//         i = highestPost;
+//         posts.forEach((post) => {
+//             i++;
+//             // Append Post
+//             var postBody = "<center id=\"" + i + "\"><div class=\"post-content\"><div class=\"main\"><div class=\"card\"><div class=\"card-header\"><h2>" + post.title + "</h2></div><div class=\"card-body\"><p class=\"card-text\">" + post.body + "</p><p class=\"date\">" + getPostDate(post.post_date) + "</p><ul class=\"meta\"><li>" + getPostUser(post.author) + "</li></ul><a href=\"/posts/view/" + post._id + "\" class=\"btn btn-primary\">View Post</a></div></div></div></div></center>";
+//             $('.posts').append(postBody);
+//             // If there are no more clientPosts left
+//             if(maxPost == i){
+//                 empty = true;
+//             }
+//         });
+//         // Remove Posts
+// 		while(currentPost - lowestPost > 3){
+// 			var post = document.getElementById(lowestPost);
+// 	        removedPosts.push(post.parentNode.removeChild(post));
+//             lowestPost++;
+//         }
+//         // Scroll back to Current Post
+//         $('#' + currentPost).scrollView();
+//         // Variables
+//         highestPost = i
+// 		loading = false;
+// 	});
+// }

@@ -7,7 +7,7 @@ let User = require('../models/user');
 
 // Show Login Form
 router.get('/', function(req, res){
-	res.render('login');
+	res.render('welcomeLogin');
 });
 
 // Login Process

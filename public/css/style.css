@@ -756,11 +756,14 @@ Sidebar
   width: 350px;
   height: 420px; 
   position: absolute;
-  top: 65%;
-  left: 46%;
+  top: 50%;
+  left: 30%;
   transform: translate(-50%, -50%);
   box-sizing: border-box;
-  background: rgba(0, 0, 0, .5)
+  background: rgba(0, 0, 0, .5);
+  margin-bottom: 5%;
+  margin-top: 15px;
+  padding: 0 30px 70px;
 
 }
  
@@ -822,8 +825,8 @@ Sidebar
   position: absolute;
   box-sizing: border-box;
   padding: 0 30px 70px;
-  top: 40%;
-  left: 45.5%;
+  top: 35%;
+  left: 20%;
   text-align: center;
   margin-bottom: 5%;
   margin-top: 15px;
@@ -832,6 +835,7 @@ Sidebar
 .signupbox > #SignupHeader {
   color: #f37735;
   margin-top: 38px;
+  padding-bottom: 20px;
   text-align: center;
   font-size: 34px;
 }
@@ -990,9 +994,9 @@ Sidebar
         margin: 15px;
       }
 
-      input[type=text] {
+      /* input[type=text] {
         width: 100%;
         padding: 12px 20px;
         margin: 8px 0;
         box-sizing: border-box;
-    }
+      } */
