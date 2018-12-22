@@ -47,7 +47,7 @@ router.get('/', function(req, res){
 	        });
 	    } else if(req.query.ajax == 'postpos'){
 			currentPost = req.query.pos;
-			removedPostsB = Number(req.query.b);
+			//removedPostsB = Number(req.query.b);
 			res.sendStatus(200);
 		} else if(req.query.ajax == 'maxpost'){
 			res.send(clientPostsRaw.length.toString());
@@ -58,31 +58,22 @@ router.get('/', function(req, res){
 			b = Number(req.query.b);
 			console.log(req.query);
 			if(clientPosts[b] && clientPosts[a]){
-				console.log(clientPosts.slice(a, b + 1).length);
-				console.log(clientPosts.slice(a, b + 1));
 				res.send(clientPosts.slice(a, b + 1));
 			} else{
 				if(!empty){
 					allocateClientPosts(b, () => {
 						if(clientPosts[b]){
-							console.log("1 <--");
-							console.log(clientPosts.slice(a, b + 1).length);
 							res.send(clientPosts.slice(a, b + 1));
 						} else{
-							console.log("2 <--");
-							console.log(clientPosts.slice(a, clientPosts.length).length);
 							res.send(clientPosts.slice(a, clientPosts.length));
 						}
 					});
 				} else{
-					console.log('3 <--');
-					console.log(clientPosts.slice(a, clientPosts.length).length);
 					res.send(clientPosts.slice(a, clientPosts.length));
 				}
 			}
 		} else if(req.query.ajax == 'getremoved'){
 			if(removedPostsB != 0){
-				console.log(clientPosts.slice(0, removedPostsB));
 				res.send(clientPosts.slice(0, removedPostsB));
 			} else{
 				res.sendStatus(200);
