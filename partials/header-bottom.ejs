@@ -1,11 +1,26 @@
 </head>
+<script>
+	function showHint(str){
+		if(str.trim().length > 0){
+			var xhttp;
+			xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function(){
+				if(this.readyState == 4 && status == 200){
+					console.log(this.responseText);
+				}
+			}
+			xhttp.open('GET', 'http://localhost:3000/search?ajax=search&str=' + str, true);
+			xhttp.send();
+		}
+	}
+</script>
 <body>
 	<header class="cd-main-header">
 		<a href="#0" class="cd-logo"><img src="../img/cd-logo.svg" alt="Logo"></a>
 		
 		<div class="cd-search is-hidden">
 			<form action="#0">
-				<input type="search" placeholder="Search...">
+				<input type="search" placeholder="Search..." onkeyup="showHint(this.value)">
 			</form>
 		</div> <!-- cd-search -->
 

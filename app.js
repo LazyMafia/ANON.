@@ -122,6 +122,10 @@ app.get('/support', function(req, res){
 	res.render('support');
 });
 
+// Search Route
+let search = require('./routes/search');
+app.use('/search', search);
+
 // Trending Route
 let trending = require('./routes/trending');
 app.use('/trending', trending);
