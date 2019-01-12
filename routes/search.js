@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 var searchPossibilities = [];
+var threadPossibilities = [];
 var userPossibilities = [];
 var searchResponse = [];
 var userResponse = [];
+var query = "";
 
 // Bring in User Model
 let User = require('../models/user');
@@ -75,36 +77,44 @@ router.get('/', function(req, res){
 		} else{
 			res.send("");
 		}
+	} else if(req.query.ajax == 'threads'){
+		var a = req.query.a;
+		if(threadPossibilities[a + 9]){
+			res.send(threadPossibilities.slice(a, a + 10));
+		} else{
+			res.send(threadPossibilities.slice(a, threadPossibilities.length));
+		}
+	} else if(req.query.ajax == 'getq'){
+		res.send(query);
 	}
 });
 
 router.get('/:q', function(req, res){
-	var query = req.params.q.toLowerCase();
+	query = req.params.q.toLowerCase();
 
 	Category.find({}, function(err, categories){
 		categories.forEach((category) => {
 			category.thread.forEach((thread) => {
+				console.log(query);
 				if(~thread.name.toLowerCase().indexOf(query) || ~query.indexOf(thread.name.toLowerCase())){
-					searchPossibilities.push(thread);
+					console.log(thread.name);
+					threadPossibilities.push(thread);
 				}
 			});
 		});
+		threadPossibilities.sort((a, b) => (a.subscribers > b.subscribers) ? 1 : ((b.subscribers > a.subscribers) ? -1 : 0));
+		console.log(threadPossibilities);
+		res.render('search');
 	});
 
-	User.find({}, function(err, users){
-		users.forEach((user) => {
-			if(~user.username.toLowerCase().indexOf(query) || ~query.indexOf(user.username.toLowerCase())){
-				userPossibilities.push(user);
-			}
-		});
-	});
-
-	searchPossibilities.sort((a, b) => (a.subscribers > b.subscribers) ? 1 : ((b.subscribers > a.subscribers) ? -1 : 0));
-	userPossibilities.sort((a, b) => (a.connected_users.followers > b.connected_users.followers) ? 1 : ((b.connected_users.followers > a.connected_users.followers) ? -1 : 0));
-
-	res.render('search', {
-		searchResults:[]
-	});
+	// User.find({}, function(err, users){
+	// 	users.forEach((user) => {
+	// 		if(~user.username.toLowerCase().indexOf(query) || ~query.indexOf(user.username.toLowerCase())){
+	// 			userPossibilities.push(user);
+	// 		}
+	// 	});
+	// 	userPossibilities.sort((a, b) => (a.connected_users.followers > b.connected_users.followers) ? 1 : ((b.connected_users.followers > a.connected_users.followers) ? -1 : 0));
+	// });
 });
 
 module.exports = router;

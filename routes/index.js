@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 var postGenerationRequests = 0;
-var clientGenerationCalls = 0; 
+var clientGenerationCalls = 0;
 var extraGenerationCalls = 0;
 var popularGenerationCalls = 0;
 var interestGenerationCalls = 0;
@@ -18,7 +18,7 @@ var trendingPercentage = 65;
 var interestPercentage = 45;
 var userTrendingPercentage = 38;
 var newPercentage = 30;
-var userNewPercentage = 15; 
+var userNewPercentage = 15;
 var popularPostTimeframe = 90;
 var empty = false;
 var userObj;
@@ -83,7 +83,7 @@ router.get('/', function(req, res){
 	        res.render('overview', {
 				clientPosts:[]
 			});
-	    } 
+	    }
 	} else {
     	res.render('welcome');
     }
@@ -118,7 +118,7 @@ function generatePosts(cb){
 													newInterestPost(post);
 												} else{
 													interestOrNew(post);
-												}	
+												}
 											}
 										} else{
 											// Trending, Interest, or New Post

@@ -16,7 +16,7 @@ var posts;
 
 // On Scroll
 $(window).scroll(function(){
-    // If User Goes to Next Post 
+    // If User Goes to Next Post
 	if($(window).scrollTop() >= $('#' + currentPost).offset().top && !loading){
         currentPost++;
     // If User Goes to Previous Post
@@ -112,7 +112,7 @@ function reload(){
                 //         // If there are no more clientPosts left
                 //         if(maxPost == i){
                 //             empty = true;
-                //         }  
+                //         }
                 //     });
                 //     // Scroll back to Current Post
                 //     $('#' + currentPost).scrollView();
@@ -218,14 +218,14 @@ function getPosts(a, b, cb){
 
 // Send Current Post to Server
 function sendCurrentPost(){
-    var xhttp;
-    xhttp = new XMLHttpRequest();
-    // if(removedPosts.length > 0){
-    //     xhttp.open('GET', 'http://localhost:3000?ajax=postpos&pos=' + currentPost + "&b=" + removedPostsB, true);
-    // } else{
-    //     xhttp.open('GET', 'http://localhost:3000?ajax=postpos&pos=' + currentPost, true);
-    // }
-    xhttp.open('GET', 'http://localhost:3000?ajax=postpos&pos=' + currentPost, true);
+  var xhttp;
+  xhttp = new XMLHttpRequest();
+  // if(removedPosts.length > 0){
+  //     xhttp.open('GET', 'http://localhost:3000?ajax=postpos&pos=' + currentPost + "&b=" + removedPostsB, true);
+  // } else{
+  //     xhttp.open('GET', 'http://localhost:3000?ajax=postpos&pos=' + currentPost, true);
+  // }
+  xhttp.open('GET', 'http://localhost:3000?ajax=postpos&pos=' + currentPost, true);
 	xhttp.send();
 }
 
@@ -238,7 +238,7 @@ function getPostDate(date){
 	var now = new Date();
 
 	// Posts Within 24hrs
-   if(postDate < 24){ 
+   if(postDate < 24){
    	// Posts Within the Hour
       if(postDate < 1){
          // Posts Within the Minute
@@ -251,14 +251,14 @@ function getPostDate(date){
          if(Math.round(postDate) >= 2){
             return Math.round(postDate) + " Hours Ago";
          // Posts from an Hour Ago
-         } else{ 
+         } else{
             return "< 1 Hour";
          }
       }
    // Posts more than a Day Old-->
    } else{
       // Posts within the Week
-      if(now.getDate() - postDayOfMonth <= 7){ 
+      if(now.getDate() - postDayOfMonth <= 7){
          return dayOfWeek[date.getDay()] + " the " + postDayOfMonth + dayEndings[stringDayOfMonth];
       // Posts Within the Same Year
       } else if(now.getYear() == date.getYear()){
@@ -272,7 +272,7 @@ function getPostDate(date){
             return months[date.getMonth()] + " " + date.getYear();
          }
       }
-   } 
+   }
 }
 
 // Different Display Based on Username
