@@ -1,4 +1,3 @@
-
 jQuery(document).ready(function(){
 	//cache DOM elements
 	var mainContent = $('.cd-main-content'),
@@ -91,7 +90,7 @@ jQuery(document).ready(function(){
 
 	function moveNavigation(){
   		var mq = checkMQ();
-        
+
         if ( mq == 'mobile' && topNavigation.parents('.cd-side-nav').length == 0 ) {
         	detachElements();
 			topNavigation.appendTo(sidebar);
@@ -117,7 +116,7 @@ jQuery(document).ready(function(){
 
 	function checkScrollbarPosition() {
 		var mq = checkMQ();
-		
+
 		if( mq != 'mobile' ) {
 			var sidebarHeight = sidebar.outerHeight(),
 				windowHeight = $(window).height(),
@@ -138,4 +137,3 @@ function enableEditMode(){
 function execCmd(command){
 	richTextField.document.exeCommand(command, false, null);
 }
-

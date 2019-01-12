@@ -16,12 +16,33 @@
     <title>Anon. - Welcome</title>
     </head>
 <body>
+	<script>
+		function showHint(str){
+			console.log(str);
+			if(str.trim().length > 0){
+				var xhttp;
+				xhttp = new XMLHttpRequest();
+				xhttp.onreadystatechange = function(){
+					if(this.readyState == 4 && this.status == 200){
+						if(this.responseText != ""){
+							searchHints = eval('(' + this.responseText + ')');
+							searchHints.forEach((hint) => {
+								console.log(hint);
+							});
+						}
+					}
+				}
+				xhttp.open('GET', 'http://localhost:3000/search?ajax=search&str=' + str, true);
+				xhttp.send();
+			}
+		}
+	</script>
 	<header class="cd-main-header">
 		<a href="#0" class="cd-logo"><img src="../img/cd-logo.svg" alt="Logo"></a>
-		
+
 		<div class="cd-search is-hidden">
 			<form action="#0">
-				<input type="search" placeholder="Search...">
+				<input type="search" placeholder="Search..." onkeyup="showHint(this.value)">
 			</form>
 		</div> <!-- cd-search -->
 
@@ -46,7 +67,7 @@
 						<li><a href="/login">Login</a></li>
 						<li><a href="/register">Sign Up</a></li>
 					<% } %>
-				
+
 					</ul>
 				</li>
 			</ul>
@@ -63,7 +84,7 @@
 				<li class="cd-label">Main</li>
 				<li class="has-children overview">
 					<a class="welcome-continue" href="/">Overview</a>
-					
+
 					<ul>
 						<li><a href="/trending">Trending</a></li>
 						<li><a href="/popular">Popular</a></li>
@@ -87,7 +108,7 @@
 				<li class="has-children comments">
 					<% if(user){ %>
 						<a href="/comments">Comments</a>
-						
+
 						<ul>
 							<li><a href="#0">All Comments</a></li>
 							<li><a href="#0">Edit Comment</a></li>
@@ -104,7 +125,7 @@
 				<li class="has-children bookmarks">
 					<% if(user){ %>
 						<a href="/bookmarks">Bookmarks</a>
-						
+
 						<ul>
 							<li><a href="#0">All Bookmarks</a></li>
 							<li><a href="#0">Edit Bookmark</a></li>
@@ -117,7 +138,7 @@
 				<li class="has-children images">
 					<% if(user){ %>
 						<a href="/images">Images</a>
-						
+
 						<ul>
 							<li><a href="#0">All Images</a></li>
 							<li><a href="#0">Edit Image</a></li>
@@ -130,7 +151,7 @@
 				<li class="has-children users">
 					<% if(user){ %>
 						<a href="/users">Users</a>
-						
+
 						<ul>
 							<li><a href="#0">All Users</a></li>
 							<li><a href="#0">Edit User</a></li>
@@ -142,7 +163,7 @@
 				</li>
 			</ul>
 
-			
+
 		</nav>
 
 		<div class="content-wrapper">
