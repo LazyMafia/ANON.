@@ -1,4 +1,4 @@
-/* -------------------------------- 
+/* --------------------------------
 
 Primary style
 
@@ -40,7 +40,7 @@ input[type="search"]::-webkit-search-results-decoration {
   display: none;
 }
 
-/* -------------------------------- 
+/* --------------------------------
 
 Main Page Content
 
@@ -79,7 +79,7 @@ Main Page Content
   }
 }
 
-/* -------------------------------- 
+/* --------------------------------
 
 Header
 
@@ -290,7 +290,7 @@ Header
   }
 }
 
-/* -------------------------------- 
+/* --------------------------------
 
 Top Navigation
 
@@ -360,7 +360,7 @@ Top Navigation
   }
 }
 
-/* -------------------------------- 
+/* --------------------------------
 
 Sidebar
 
@@ -754,7 +754,7 @@ Sidebar
 
 .loginbox {
   width: 350px;
-  height: 420px; 
+  height: 420px;
   position: absolute;
   top: 50%;
   left: 30%;
@@ -766,7 +766,7 @@ Sidebar
   padding: 0 30px 70px;
 
 }
- 
+
 .loginbox > #LoginHeader {
   color: #f37735;
   margin-top: 25px;
@@ -804,7 +804,7 @@ Sidebar
   outline: none;
   height: 40px;
   background: #f37735;
-  color: #fff; 
+  color: #fff;
   font-size: 18px;
   border-radius: 28px;
 }
@@ -869,7 +869,7 @@ Sidebar
   outline: none;
   height: 40px;
   background: #f37735;
-  color: #fff; 
+  color: #fff;
   font-size: 18px;
   border-radius: 28px;
 }
@@ -928,6 +928,11 @@ Sidebar
   top: 30%;
 }
 
+/*search page*/
+#searchResults, #userResults {
+  height: auto;
+}
+
 /*post page content*/
 
         .post-content{
@@ -938,7 +943,7 @@ Sidebar
         }
 
         .post-content .main .card p.date {
-          position: absolute; left: 0; top: 0; padding: 1px 7px 4px 7px; 
+          position: absolute; left: 0; top: 0; padding: 1px 7px 4px 7px;
           background: url();
           font: bold 25px Helvetica, Sans-Serif; color: white; text-align: center;
         }
@@ -952,7 +957,7 @@ Sidebar
           float: center;
           padding-top: 10px;
         }
-        
+
         .post-content .main .card ul.meta li.comments {
           padding-top: 10px;
         }
@@ -978,9 +983,9 @@ Sidebar
         .card .card-header {
           color: whitesmoke;
         }
-        
+
         #post {
-          margin-top: 15px; 
+          margin-top: 15px;
         }
 
         .content-wrapper h2 {
