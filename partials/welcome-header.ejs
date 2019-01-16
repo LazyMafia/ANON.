@@ -36,13 +36,20 @@
 				xhttp.send();
 			}
 		}
+
+		function search(){
+			var link = 'http://localhost:3000/search/' + document.getElementById('searchBar').value
+			alert(link);
+			window.location.replace("http://www.google.com");
+			//document.location.replace('http://localhost:3000/trending');
+		}
 	</script>
 	<header class="cd-main-header">
 		<a href="#0" class="cd-logo"><img src="../img/cd-logo.svg" alt="Logo"></a>
 
 		<div class="cd-search is-hidden">
-			<form action="#0">
-				<input type="search" placeholder="Search..." onkeyup="showHint(this.value)">
+			<form onsubmit="search()">
+				<input type="search" id="searchBar" placeholder="Search..." onkeyup="showHint(this.value)">
 			</form>
 		</div> <!-- cd-search -->
 

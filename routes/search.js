@@ -20,7 +20,6 @@ router.get('/', function(req, res){
 			categories.forEach((category) => {
 				category.thread.forEach((thread) => {
 					if(~thread.name.toLowerCase().indexOf(str) || ~str.indexOf(thread.name.toLowerCase())){
-						console.log(thread.name);
 						searchPossibilities.push(thread);
 					}
 				});
@@ -30,7 +29,6 @@ router.get('/', function(req, res){
 		User.find({}, function(err, users){
 			users.forEach((user) => {
 				if(~user.username.toLowerCase().indexOf(str) || ~str.indexOf(user.username.toLowerCase())){
-					console.log(user.username);
 					userPossibilities.push(user);
 				}
 			});
