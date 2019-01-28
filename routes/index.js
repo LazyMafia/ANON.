@@ -31,6 +31,9 @@ var b;
 let Post = require('../models/post');
 
 router.get('/', function(req, res){
+  console.log(req.body);
+  console.log(req.params);
+  console.log(req.query);
     userObj = req.user;
     if(req.user || welcomeContinue){
 	    if(clientPostsRaw.length < 1 && !empty){

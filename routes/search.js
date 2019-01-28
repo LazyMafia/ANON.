@@ -75,6 +75,9 @@ router.get('/', function(req, res){
 		} else{
 			res.send("");
 		}
+	} else if(req.query.ajax == 'redirect'){
+		res.send(req.query.q);
+		//res.redirect('/search/' + req.query.q);
 	} else if(req.query.ajax == 'threads'){
 		var a = Number(req.query.a);
 		if(threadPossibilities[a + 9]){

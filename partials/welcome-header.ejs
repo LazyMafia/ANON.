@@ -38,10 +38,18 @@
 		}
 
 		function search(){
-			var link = 'http://localhost:3000/search/' + document.getElementById('searchBar').value
-			alert(link);
-			window.location.replace("http://www.google.com");
-			//document.location.replace('http://localhost:3000/trending');
+			alert();
+			var xhttp;
+			xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function(){
+				if(this.readyState == 4 && this.status == 200){
+					console.log("CYCLE");
+					window.location.replace('http://localhost:3000/search/' + this.responseText);
+				}
+			}
+			xhttp.open('GET', 'http://localhost:3000/search?ajax=redirect&q=' + document.getElementById('searchBar').value, true);
+			xhttp.send();
+			//window.location.replace('http://localhost:3000/search/' + document.getElementById('searchBar').value);
 		}
 	</script>
 	<header class="cd-main-header">
